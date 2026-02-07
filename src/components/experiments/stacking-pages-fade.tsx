@@ -89,6 +89,44 @@ export function StackingPagesFade({ onReplay }: Props) {
 
       const pages = gsap.utils.toArray<HTMLElement>(".stack-fade-page", scroller);
 
+      // Intro text stagger on load
+      const introEls = scroller.querySelectorAll(".intro-text-el");
+      if (introEls.length) {
+        gsap.set(introEls, { opacity: 0, y: 20 });
+        gsap.to(introEls, {
+          opacity: 1,
+          y: 0,
+          stagger: 0.15,
+          duration: 0.6,
+          ease: "power2.out",
+          delay: 0.3,
+        });
+      }
+
+      // Page 1 text stagger — triggered when it scrolls into view
+      const firstTextEls = pages[0]?.querySelectorAll(".page-text-el");
+      if (firstTextEls?.length) {
+        gsap.set(firstTextEls, { opacity: 0, y: 30 });
+        ScrollTrigger.create({
+          trigger: pages[0],
+          scroller: scroller,
+          start: "top 80%",
+          onEnter: () => {
+            gsap.to(firstTextEls, {
+              opacity: 1,
+              y: 0,
+              stagger: 0.12,
+              duration: 0.6,
+              ease: "power2.out",
+              overwrite: true,
+            });
+          },
+          onLeaveBack: () => {
+            gsap.set(firstTextEls, { opacity: 0, y: 30 });
+          },
+        });
+      }
+
       pages.forEach((page, i) => {
         if (i === 0) return;
 
@@ -105,7 +143,7 @@ export function StackingPagesFade({ onReplay }: Props) {
           },
         });
 
-        // Previous page scales down, drifts up, and fades out
+        // Previous page fades out
         const prev = pages[i - 1];
         ScrollTrigger.create({
           trigger: page,
@@ -115,10 +153,29 @@ export function StackingPagesFade({ onReplay }: Props) {
           scrub: true,
           onUpdate: (self) => {
             const p = self.progress;
-            const scale = 1 - p * 0.1;
-            const opacity = 1 - p;
-            const yShift = -p * dims.h * 0.15;
-            gsap.set(prev, { scale, opacity, y: yShift });
+            gsap.set(prev, { opacity: 1 - p });
+          },
+        });
+
+        // Text content staggers in when page fully lands
+        const textEls = page.querySelectorAll(".page-text-el");
+        gsap.set(textEls, { opacity: 0, y: 30 });
+        ScrollTrigger.create({
+          trigger: page,
+          scroller: scroller,
+          start: "top top",
+          onEnter: () => {
+            gsap.to(textEls, {
+              opacity: 1,
+              y: 0,
+              stagger: 0.12,
+              duration: 0.6,
+              ease: "power2.out",
+              overwrite: true,
+            });
+          },
+          onLeaveBack: () => {
+            gsap.set(textEls, { opacity: 0, y: 30 });
           },
         });
       });
@@ -136,9 +193,9 @@ export function StackingPagesFade({ onReplay }: Props) {
 
       {/* Intro section */}
       <div className="stack-fade-intro flex flex-col items-center justify-center" style={{ height: dims.h }}>
-        <p className="text-sm font-mono text-zinc-500 tracking-widest uppercase mb-6">Stacking Pages</p>
-        <h1 className="text-5xl font-bold text-zinc-100 tracking-tight mb-8">Scroll Down</h1>
-        <div className="animate-bounce text-zinc-500">
+        <p className="intro-text-el text-sm font-mono text-zinc-500 tracking-widest uppercase mb-6">Stacking Pages</p>
+        <h1 className="intro-text-el text-5xl font-bold text-zinc-100 tracking-tight mb-8">Scroll Down</h1>
+        <div className="intro-text-el animate-bounce text-zinc-500">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M12 5v14M5 12l7 7 7-7" />
           </svg>
@@ -155,16 +212,16 @@ export function StackingPagesFade({ onReplay }: Props) {
             className={`${page.bg} ${page.border} border-t w-full h-full flex items-center justify-center shadow-2xl shadow-black/50`}
           >
             <div className="text-center max-w-lg px-8">
-              <span className={`block text-sm font-mono ${page.accent} tracking-widest mb-4`}>
+              <span className={`page-text-el block text-sm font-mono ${page.accent} tracking-widest mb-4`}>
                 {page.subtitle}
               </span>
-              <h2 className="text-6xl font-bold tracking-tighter text-zinc-100 mb-6">
+              <h2 className="page-text-el text-6xl font-bold tracking-tighter text-zinc-100 mb-6">
                 {page.title}
               </h2>
-              <p className="text-lg text-zinc-400 leading-relaxed">
+              <p className="page-text-el text-lg text-zinc-400 leading-relaxed">
                 {page.body}
               </p>
-              <div className={`mx-auto mt-8 h-px w-16 ${page.accent.replace("text-", "bg-")}/30`} />
+              <div className={`page-text-el mx-auto mt-8 h-px w-16 ${page.accent.replace("text-", "bg-")}/30`} />
             </div>
           </div>
         </div>

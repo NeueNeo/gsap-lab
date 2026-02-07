@@ -178,9 +178,9 @@ export function CounterScroll({ onReplay }: Props) {
     <div ref={containerRef} className="h-full overflow-y-auto">
       <div className="py-20 px-4">
         {/* Spacer to enable scroll */}
-        <div className="h-[30vh] flex items-end justify-center pb-8">
-          <p className="text-sm font-mono text-zinc-500 animate-bounce">
-            ↓ scroll to count up
+        <div className="h-[70vh] flex items-center justify-center">
+          <p className="text-sm font-mono text-zinc-500 tracking-widest">
+            ↓ SCROLL TO COUNT UP
           </p>
         </div>
 

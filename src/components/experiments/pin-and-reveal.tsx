@@ -51,6 +51,16 @@ export function PinAndReveal({ onReplay }: Props) {
       const track = trackRef.current;
       if (!scroller || !track || !dims.w) return;
 
+      // Progress bar
+      const bar = scroller.querySelector(".pin-progress-bar") as HTMLElement;
+      if (bar) {
+        scroller.addEventListener("scroll", () => {
+          const max = scroller.scrollHeight - scroller.clientHeight;
+          const p = max > 0 ? scroller.scrollTop / max : 0;
+          bar.style.transform = `scaleX(${p})`;
+        });
+      }
+
       gsap.to(track, {
         x: -scrollDistance,
         ease: "none",
@@ -76,10 +86,7 @@ export function PinAndReveal({ onReplay }: Props) {
       ref={containerRef}
       className="h-full overflow-y-auto"
     >
-      {/* Pre-content */}
-      <div className="h-[20vh] flex items-center justify-center">
-        <p className="text-sm font-mono text-zinc-500">↓ Scroll to reveal panels</p>
-      </div>
+      <div className="pin-progress-bar fixed top-0 left-0 w-full h-1 bg-emerald-400 origin-left z-50" style={{ transform: "scaleX(0)" }} />
 
       {/* Tall wrapper — height is exactly scrollDistance + one viewport so sticky never unsticks early */}
       <div
@@ -118,10 +125,6 @@ export function PinAndReveal({ onReplay }: Props) {
         </div>
       </div>
 
-      {/* Post-content */}
-      <div className="h-[20vh] flex items-center justify-center">
-        <p className="text-sm font-mono text-zinc-600">End of horizontal reveal</p>
-      </div>
     </div>
   );
 }

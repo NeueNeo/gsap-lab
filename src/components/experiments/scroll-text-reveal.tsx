@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -16,34 +16,41 @@ interface Props {
 export function ScrollTextReveal({ onReplay }: Props) {
   void onReplay;
   const containerRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
+  const [scrollerH, setScrollerH] = useState(0);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      setScrollerH(containerRef.current.offsetHeight);
+    }
+  }, []);
 
   useGSAP(
     () => {
+      if (!scrollerH) return;
       const scroller = containerRef.current;
-      const textContainer = textRef.current;
-      if (!scroller || !textContainer) return;
+      if (!scroller) return;
 
-      const words = gsap.utils.toArray<HTMLSpanElement>(".reveal-word", textContainer);
+      const words = gsap.utils.toArray<HTMLSpanElement>(".reveal-word", scroller);
+      if (!words.length) return;
 
       gsap.fromTo(
         words,
-        { color: "rgb(63 63 70)" }, // zinc-700
+        { color: "rgb(63 63 70)" },
         {
-          color: "rgb(244 244 245)", // zinc-100
+          color: "rgb(244 244 245)",
           stagger: 0.05,
           ease: "none",
           scrollTrigger: {
-            trigger: textContainer,
+            trigger: ".text-reveal-block",
             scroller: scroller,
-            start: "top 70%",
-            end: "bottom 30%",
+            start: "top bottom",
+            end: "bottom center",
             scrub: 1,
           },
         }
       );
     },
-    { scope: containerRef }
+    { scope: containerRef, dependencies: [scrollerH] }
   );
 
   const words = PARAGRAPH.split(" ");
@@ -51,13 +58,13 @@ export function ScrollTextReveal({ onReplay }: Props) {
   return (
     <div ref={containerRef} className="h-full overflow-y-auto bg-zinc-950">
       <div className="max-w-3xl mx-auto px-8">
-        {/* Spacer */}
-        <div className="h-[40vh] flex items-end justify-center pb-8">
+        {/* Top spacer — full scroller height so text starts off-screen */}
+        <div style={{ height: scrollerH || "100%" }} className="flex items-center justify-center">
           <p className="text-xs font-mono text-zinc-600 tracking-widest">↓ SCROLL TO REVEAL</p>
         </div>
 
-        {/* Text block */}
-        <div ref={textRef} className="py-16">
+        {/* Text block — scrolls naturally */}
+        <div className="text-reveal-block py-16">
           <p className="text-3xl md:text-4xl font-semibold leading-relaxed tracking-tight">
             {words.map((word, i) => (
               <span key={i} className="reveal-word inline-block mr-[0.3em]" style={{ color: "rgb(63 63 70)" }}>
@@ -69,13 +76,13 @@ export function ScrollTextReveal({ onReplay }: Props) {
 
         {/* Attribution */}
         <div className="py-8 border-t border-zinc-800/50">
-          <p className="text-xs font-mono text-zinc-600">
+          <p className="text-xs font-mono text-zinc-600 tracking-widest">
             Scrubbed word-by-word reveal · zinc-700 → zinc-100
           </p>
         </div>
 
-        {/* Bottom spacer */}
-        <div className="h-[50vh] flex items-center justify-center">
+        {/* Lots of bottom breathing room */}
+        <div style={{ height: scrollerH ? scrollerH * 0.5 : "50%" }} className="flex items-center justify-center">
           <p className="text-xs font-mono text-zinc-700">◆</p>
         </div>
       </div>

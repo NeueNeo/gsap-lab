@@ -55,6 +55,16 @@ export function BatchStaggerReveal({ onReplay }: Props) {
             ease: "power2.out",
             overwrite: true,
           });
+          // Fill progress bars
+          batch.forEach((card: Element, i: number) => {
+            const bar = card.querySelector(".batch-bar-fill") as HTMLElement;
+            if (bar) {
+              gsap.fromTo(bar,
+                { scaleX: 0 },
+                { scaleX: 1, duration: 1.2, ease: "power2.out", delay: i * 0.12 + 0.3, transformOrigin: "left center" }
+              );
+            }
+          });
         },
         onLeave: (batch) => {
           gsap.set(batch, { autoAlpha: 0, y: -60, overwrite: true });
@@ -67,6 +77,15 @@ export function BatchStaggerReveal({ onReplay }: Props) {
             duration: 0.6,
             ease: "power2.out",
             overwrite: true,
+          });
+          batch.forEach((card: Element, i: number) => {
+            const bar = card.querySelector(".batch-bar-fill") as HTMLElement;
+            if (bar) {
+              gsap.fromTo(bar,
+                { scaleX: 0 },
+                { scaleX: 1, duration: 1.2, ease: "power2.out", delay: i * 0.12 + 0.3, transformOrigin: "left center" }
+              );
+            }
           });
         },
         onLeaveBack: (batch) => {
@@ -104,10 +123,10 @@ export function BatchStaggerReveal({ onReplay }: Props) {
                 <div className={`w-2 h-2 rounded-full ${colors.dot} mb-4 opacity-60`} />
                 <p className="text-lg font-semibold text-zinc-200">{item.label}</p>
                 <p className={`text-xs font-mono ${colors.text} mt-1`}>{item.accent}</p>
-                <div className="mt-4 h-1.5 w-full rounded-full bg-zinc-800">
+                <div className="mt-4 h-1.5 w-full rounded-full bg-zinc-800 overflow-hidden">
                   <div
-                    className={`h-full rounded-full ${colors.dot} opacity-30`}
-                    style={{ width: `${30 + Math.random() * 60}%` }}
+                    className={`batch-bar-fill h-full rounded-full ${colors.dot} opacity-30`}
+                    style={{ width: "100%", transform: "scaleX(0)", transformOrigin: "left center" }}
                   />
                 </div>
               </div>

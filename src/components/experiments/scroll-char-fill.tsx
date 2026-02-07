@@ -50,7 +50,7 @@ export function ScrollCharFill({ onReplay }: Props) {
         scrollTrigger: {
           trigger: ".fill-trigger",
           scroller: scroller,
-          start: "top top",
+          start: "top center",
           end: `+=${scrollDist}`,
           scrub: true,
         },
@@ -59,12 +59,13 @@ export function ScrollCharFill({ onReplay }: Props) {
     { scope: containerRef, dependencies: [scrollerH] }
   );
 
-  const chars = TEXT.split("");
+  const words = TEXT.split(" ");
+  let charIndex = 0;
 
   return (
     <div ref={containerRef} className="h-full overflow-y-auto bg-zinc-950">
-      {/* Spacer above — one full viewport to ensure trigger starts at 0 */}
-      <div style={{ height: scrollerH || "100%" }} className="flex items-end justify-center pb-8">
+      {/* Spacer above — half viewport so it starts sooner */}
+      <div style={{ height: scrollerH ? scrollerH * 0.5 : "50%" }} className="flex items-center justify-center">
         <p className="text-xs font-mono text-zinc-600 tracking-widest">↓ SCROLL TO FILL</p>
       </div>
 
@@ -72,20 +73,26 @@ export function ScrollCharFill({ onReplay }: Props) {
       <div className="fill-trigger" style={{ height: scrollerH ? scrollerH * 3 : "300%" }}>
         <div className="sticky top-[35%]">
           <div className="max-w-4xl mx-auto px-8">
-            <div className="flex flex-wrap justify-center gap-x-2 gap-y-4">
-              {chars.map((char, i) => (
-                <span
-                  key={i}
-                  ref={(el) => { charRefs.current[i] = el; }}
-                  className="inline-block text-7xl font-black tracking-tight"
-                  style={{
-                    color: "rgb(39 39 42)",
-                    whiteSpace: char === " " ? "pre" : undefined,
-                  }}
-                >
-                  {char === " " ? "\u00A0" : char}
-                </span>
-              ))}
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-4">
+              {words.map((word, wi) => {
+                const wordChars = word.split("");
+                const startIdx = charIndex;
+                charIndex += wordChars.length;
+                return (
+                  <span key={wi} className="inline-flex whitespace-nowrap">
+                    {wordChars.map((char, ci) => (
+                      <span
+                        key={ci}
+                        ref={(el) => { charRefs.current[startIdx + ci] = el; }}
+                        className="inline-block text-7xl font-black tracking-tight"
+                        style={{ color: "rgb(39 39 42)" }}
+                      >
+                        {char}
+                      </span>
+                    ))}
+                  </span>
+                );
+              })}
             </div>
             <p className="text-xs font-mono text-zinc-600 text-center mt-12">
               Per-character color fill · zinc-800 → emerald-400

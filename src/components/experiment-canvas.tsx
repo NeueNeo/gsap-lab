@@ -15,7 +15,7 @@ import { PinAndReveal } from "./experiments/pin-and-reveal";
 import { ProgressBar } from "./experiments/progress-bar";
 import { MagneticButton } from "./experiments/magnetic-button";
 import { DraggableCards } from "./experiments/draggable-cards";
-import { ElasticMenu } from "./experiments/elastic-menu";
+import { ElasticMenus } from "./experiments/elastic-menus";
 import { BouncingBalls } from "./experiments/bouncing-balls";
 import { SvgPathDraw } from "./experiments/svg-path-draw";
 import { MorphingShape } from "./experiments/morphing-shape";
@@ -24,14 +24,16 @@ import { SplitScatter } from "./experiments/split-scatter";
 import { GlitchText } from "./experiments/glitch-text";
 import { RollingText } from "./experiments/rolling-text";
 import { TextWave } from "./experiments/text-wave";
+import { LetterRollup } from "./experiments/letter-rollup";
+import { CylinderText } from "./experiments/cylinder-text";
 import { ScrollVelocitySkew } from "./experiments/scroll-velocity-skew";
 import { BatchStaggerReveal } from "./experiments/batch-stagger-reveal";
 import { SnapSections } from "./experiments/snap-sections";
 import { ScrollTextReveal } from "./experiments/scroll-text-reveal";
-import { ScrollHighlightReveal } from "./experiments/scroll-highlight-reveal";
 import { ScrollCharFill } from "./experiments/scroll-char-fill";
 import { ScrollParagraphFade } from "./experiments/scroll-paragraph-fade";
 import { WipeTransition } from "./experiments/wipe-transition";
+import { WipeLR } from "./experiments/wipe-lr";
 import { CrossfadePages } from "./experiments/crossfade-pages";
 import { SlideTransition } from "./experiments/slide-transition";
 import { SkeletonShimmer } from "./experiments/skeleton-shimmer";
@@ -66,7 +68,7 @@ const experimentComponents: Record<string, React.ComponentType<{ onReplay: () =>
   "progress-bar": ProgressBar,
   "magnetic-button": MagneticButton,
   "draggable-cards": DraggableCards,
-  "elastic-menu": ElasticMenu,
+  "elastic-menus": ElasticMenus,
   "bouncing-balls": BouncingBalls,
   "svg-path-draw": SvgPathDraw,
   "morphing-shape": MorphingShape,
@@ -75,14 +77,16 @@ const experimentComponents: Record<string, React.ComponentType<{ onReplay: () =>
   "glitch-text": GlitchText,
   "rolling-text": RollingText,
   "text-wave": TextWave,
+  "letter-rollup": LetterRollup,
+  "cylinder-text": CylinderText,
   "scroll-velocity-skew": ScrollVelocitySkew,
   "batch-stagger-reveal": BatchStaggerReveal,
   "snap-sections": SnapSections,
   "scroll-text-reveal": ScrollTextReveal,
-  "scroll-highlight-reveal": ScrollHighlightReveal,
   "scroll-char-fill": ScrollCharFill,
   "scroll-paragraph-fade": ScrollParagraphFade,
   "wipe-transition": WipeTransition,
+  "wipe-lr": WipeLR,
   "crossfade-pages": CrossfadePages,
   "slide-transition": SlideTransition,
   "skeleton-shimmer": SkeletonShimmer,

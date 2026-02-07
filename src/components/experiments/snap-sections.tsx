@@ -65,6 +65,20 @@ export function SnapSections({ onReplay }: Props) {
 
       const panels = gsap.utils.toArray<HTMLElement>(".snap-panel", scroller);
 
+      // Progress bar
+      const bar = scroller.querySelector(".snap-progress-bar") as HTMLElement;
+      if (bar) {
+        const numSections = panels.length;
+        const update = () => {
+          const h = scroller.clientHeight;
+          const pageProgress = h > 0 ? scroller.scrollTop / h : 0;
+          const p = (pageProgress + 1) / numSections;
+          bar.style.transform = `scaleX(${Math.min(p, 1)})`;
+        };
+        update();
+        scroller.addEventListener("scroll", update);
+      }
+
       // Animate each panel's content when it enters view
       panels.forEach((panel) => {
         const heading = panel.querySelector(".snap-heading");
@@ -96,6 +110,7 @@ export function SnapSections({ onReplay }: Props) {
       className="h-full overflow-y-auto bg-zinc-950"
       style={{ scrollSnapType: "y mandatory" }}
     >
+      <div className="snap-progress-bar fixed top-0 left-0 w-full h-1 bg-emerald-400 origin-left z-50" style={{ transform: "scaleX(0.2)" }} />
       {SECTIONS.map((section, i) => (
         <div
           key={i}
