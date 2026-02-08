@@ -1,4 +1,3 @@
-"use client";
 
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
@@ -203,7 +202,7 @@ export function ExperimentCanvas({ activeId }: ExperimentCanvasProps) {
           ↻ Replay
         </Button>
       </header>
-      <div className="flex-1 overflow-auto relative">
+      <div className="flex-1 overflow-x-hidden overflow-y-auto relative">
         <div key={replayKey} className="h-full">
           <Component onReplay={handleReplay} />
         </div>

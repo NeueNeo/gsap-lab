@@ -1,4 +1,3 @@
-"use client";
 
 import { useRef } from "react";
 import gsap from "gsap";
@@ -109,7 +108,7 @@ export function ParallaxLayers({ onReplay }: Props) {
 
   return (
     <div ref={containerRef} className="h-full overflow-y-auto">
-      <div className="parallax-content relative" style={{ height: "300vh" }}>
+      <div className="parallax-content relative overflow-hidden" style={{ height: "220vh" }}>
 
         {/* ===== LAYER 0: Deep background grid ===== */}
         <div className="prlx-grid absolute inset-0 pointer-events-none">
@@ -285,7 +284,7 @@ export function ParallaxLayers({ onReplay }: Props) {
           <p className="text-[10px] font-mono text-zinc-600 tracking-widest">↓ SCROLL TO EXPLORE DEPTH</p>
         </div>
 
-        <div className="absolute bottom-[5vh] w-full text-center">
+        <div className="absolute bottom-[2vh] w-full text-center">
           <p className="text-xs font-mono text-zinc-600">
             ◆ End of parallax zone
           </p>

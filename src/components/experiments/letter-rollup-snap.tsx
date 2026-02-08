@@ -1,4 +1,3 @@
-"use client";
 
 import { useRef, useState } from "react";
 import gsap from "gsap";
@@ -78,13 +77,6 @@ export function LetterRollupSnap({ onReplay }: Props) {
             </div>
           ))}
         </div>
-
-        <button
-          onClick={() => setKey((k) => k + 1)}
-          className="px-5 py-2.5 rounded-xl border border-zinc-800 bg-zinc-900/60 text-sm font-mono text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/80 transition-colors"
-        >
-          Replay ↻
-        </button>
 
         <p className="text-xs font-mono text-zinc-600 tracking-widest">
           expo.inOut · 1s · stagger 0.034 from random

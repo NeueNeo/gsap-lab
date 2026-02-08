@@ -1,10 +1,8 @@
-"use client";
-
 import { useState } from "react";
 import { Sidebar } from "@/components/sidebar";
 import { ExperimentCanvas } from "@/components/experiment-canvas";
 
-export default function Home() {
+export function App() {
   const [activeId, setActiveId] = useState<string>("character-reveal");
 
   return (

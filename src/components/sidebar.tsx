@@ -1,4 +1,3 @@
-"use client";
 
 import { categories } from "@/lib/experiments";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -61,7 +60,7 @@ export function Sidebar({ activeId, onSelect }: SidebarProps) {
       </ScrollArea>
       <div className="px-5 py-4 border-t border-zinc-800">
         <p className="text-[11px] font-mono text-zinc-600">
-          Built with GSAP + Next.js
+          Built with GSAP + React + Vite
         </p>
       </div>
     </aside>

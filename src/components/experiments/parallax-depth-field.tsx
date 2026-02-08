@@ -1,4 +1,3 @@
-"use client";
 
 import { useRef } from "react";
 import gsap from "gsap";
@@ -70,7 +69,7 @@ export function ParallaxDepthField({ onReplay }: Props) {
 
   return (
     <div ref={containerRef} className="h-full overflow-y-auto">
-      <div className="pdf-content relative" style={{ height: "300vh" }}>
+      <div className="pdf-content relative" style={{ height: "330vh" }}>
 
         {/* Background grid */}
         <div className="pdf-grid absolute inset-0 pointer-events-none">

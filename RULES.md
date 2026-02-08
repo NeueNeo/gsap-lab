@@ -123,6 +123,14 @@ Each entry: what was broken, why, and the correct pattern.
 
 ---
 
+### `morphing-shape.tsx`
+**Bug:** Shapes never formed correctly — snapped between states instead of smooth morphing.
+**Root cause:** GSAP cannot interpolate `clip-path: polygon(...)` strings. It has no parser for complex CSS function strings. It just snaps from one to the next.
+**Fix:** Store polygon points as plain `{ x, y }` objects. Tween each point's x and y independently with `gsap.to(points[i], { x, y })`. Rebuild the `polygon()` string on every `onUpdate` frame via `shape.style.clipPath = buildClipPath()`. All shapes must have the same number of points for smooth interpolation.
+**Rule:** GSAP can't animate complex CSS strings (clip-path, d attribute). Break them into numeric values, tween those, rebuild the string in onUpdate.
+
+---
+
 ## Known Broken (Not Yet Fixed)
 
 - `masked-line-reveal` — text not showing
