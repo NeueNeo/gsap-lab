@@ -107,7 +107,7 @@ function DropdownMenu() {
     if (wasOpen) {
       const children = container.querySelectorAll(`.ddc-${idx} .dd-child`);
       const wrapper = container.querySelector(`.ddc-${idx}`) as HTMLElement;
-      gsap.to(children, { x: -20, opacity: 0, stagger: 0.03, duration: 0.2, ease: "power2.in", onComplete: () => { gsap.set(wrapper, { height: 0, overflow: "hidden" }); } });
+      gsap.to(wrapper, { height: 0, duration: 0.3, ease: "power2.in", overflow: "hidden" });
       gsap.to(container.querySelector(`.ddch-${idx}`), { rotation: 0, duration: 0.4, ease: "elastic.out(1, 0.4)" });
     } else {
       // Close others
@@ -180,7 +180,7 @@ function DropdownMenu() {
 export function ElasticMenus({ onReplay }: Props) {
   void onReplay;
   return (
-    <div className="flex items-center justify-center h-full p-8 gap-8">
+    <div className="flex items-start justify-center h-full p-8 pt-24 gap-8">
       <ActiveMenu />
       <DropdownMenu />
     </div>

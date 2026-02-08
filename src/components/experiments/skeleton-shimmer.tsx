@@ -1,4 +1,3 @@
-
 import { useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -32,68 +31,27 @@ export function SkeletonShimmer({ onReplay }: Props) {
       if (!container) return;
 
       if (!loaded) {
-        // Shimmer animation on skeleton lines
+        // Shimmer on skeleton bars
         const skeletons = gsap.utils.toArray<HTMLElement>(".skeleton-bar", container);
-
         skeletons.forEach((el) => {
           gsap.fromTo(
             el,
             { backgroundPosition: "-200% 0" },
-            {
-              backgroundPosition: "200% 0",
-              duration: 1.5,
-              ease: "none",
-              repeat: -1,
-            }
+            { backgroundPosition: "200% 0", duration: 1.5, ease: "none", repeat: -1 }
           );
         });
+
+        // Auto-load after 5 seconds
+        gsap.delayedCall(3, () => setLoaded(true));
+      } else {
+        // Real cards stagger in
+        const realCards = gsap.utils.toArray<HTMLElement>(".real-card", container);
+        gsap.fromTo(
+          realCards,
+          { y: 30, opacity: 0 },
+          { y: 0, opacity: 1, stagger: 0.12, duration: 0.5, ease: "back.out(1.4)" }
+        );
       }
-    },
-    { scope: containerRef, dependencies: [loaded] }
-  );
-
-  const { contextSafe } = useGSAP({ scope: containerRef });
-
-  const handleLoad = contextSafe(() => {
-    if (loaded) {
-      // Reset
-      setLoaded(false);
-      return;
-    }
-
-    const container = containerRef.current;
-    if (!container) return;
-
-    // Fade out skeletons
-    const skeletons = container.querySelectorAll(".skeleton-card");
-    const tl = gsap.timeline({
-      onComplete: () => setLoaded(true),
-    });
-
-    tl.to(skeletons, {
-      autoAlpha: 0,
-      y: -10,
-      stagger: 0.08,
-      duration: 0.3,
-      ease: "power2.in",
-    });
-  });
-
-  // After loaded state changes, animate real content in
-  useGSAP(
-    () => {
-      if (!loaded) return;
-      const container = containerRef.current;
-      if (!container) return;
-
-      const realCards = container.querySelectorAll(".real-card");
-      gsap.from(realCards, {
-        y: 30,
-        autoAlpha: 0,
-        stagger: 0.12,
-        duration: 0.5,
-        ease: "back.out(1.4)",
-      });
     },
     { scope: containerRef, dependencies: [loaded] }
   );
@@ -102,7 +60,6 @@ export function SkeletonShimmer({ onReplay }: Props) {
     <div ref={containerRef} className="h-full bg-zinc-950 flex flex-col">
       <div className="flex-1 flex items-center justify-center px-8">
         <div className="w-full max-w-md">
-          {/* Header */}
           <div className="mb-6">
             <p className="text-xs font-mono text-zinc-500 tracking-widest uppercase mb-2">
               {loaded ? "Content Loaded" : "Loading…"}
@@ -112,11 +69,9 @@ export function SkeletonShimmer({ onReplay }: Props) {
             </h2>
           </div>
 
-          {/* Content area */}
           <div className="space-y-4">
             {!loaded ? (
               <>
-                {/* Skeleton cards */}
                 {[0, 1, 2].map((i) => (
                   <div
                     key={i}
@@ -165,7 +120,6 @@ export function SkeletonShimmer({ onReplay }: Props) {
               </>
             ) : (
               <>
-                {/* Real cards */}
                 {REAL_CARDS.map((card, i) => {
                   const colors = ACCENT_MAP[card.accent];
                   return (
@@ -198,16 +152,6 @@ export function SkeletonShimmer({ onReplay }: Props) {
             )}
           </div>
         </div>
-      </div>
-
-      {/* Trigger */}
-      <div className="flex justify-center pb-10">
-        <button
-          onClick={handleLoad}
-          className="px-6 py-3 rounded-xl border border-zinc-700/50 bg-zinc-900/60 text-sm font-mono text-zinc-300 hover:bg-zinc-800/80 transition-colors"
-        >
-          {loaded ? "↻ Reset to Skeleton" : "Simulate Load →"}
-        </button>
       </div>
     </div>
   );

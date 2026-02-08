@@ -58,17 +58,15 @@ export function MacosDockEffect({ onReplay }: Props) {
     const dockRect = dock.getBoundingClientRect();
     const mouseX = e.clientX - dockRect.left;
 
+    const idx = Math.floor(mouseX / (ITEM_SIZE + GAP));
+
     for (let i = 0; i < DOCK_ITEMS.length; i++) {
       const item = itemRefs.current[i];
       if (!item) continue;
 
-      const itemCenter = (ITEM_SIZE + GAP) * i + ITEM_SIZE / 2;
-      const distance = Math.abs(mouseX - itemCenter);
-
-      // Gaussian falloff for scale
-      const sigma = INFLUENCE_RADIUS / 2.5;
-      const scale = 1 + (MAX_SCALE - 1) * gaussian(distance, sigma);
-      const yOffset = -(scale - 1) * 20;
+      const isHovered = i === idx && idx >= 0 && idx < DOCK_ITEMS.length;
+      const scale = isHovered ? MAX_SCALE : 1;
+      const yOffset = isHovered ? -(MAX_SCALE - 1) * 20 : 0;
 
       gsap.to(item, {
         scale,
@@ -78,9 +76,6 @@ export function MacosDockEffect({ onReplay }: Props) {
         overwrite: "auto",
       });
     }
-
-    // Track hovered for tooltip
-    const idx = Math.floor(mouseX / (ITEM_SIZE + GAP));
     setHoveredIndex(idx >= 0 && idx < DOCK_ITEMS.length ? idx : -1);
   }, []);
 

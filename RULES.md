@@ -131,6 +131,14 @@ Each entry: what was broken, why, and the correct pattern.
 
 ---
 
+### `card-carousel.tsx`
+**Bug:** Pressing right arrow at card #4 animated backwards to card #1 instead of continuing forward.
+**Root cause:** Direction was calculated from index comparison (`index > active ? 1 : -1`). Going from index 3 to index 0, `0 > 3` is false → direction was -1 (backwards).
+**Fix:** Pass explicit direction from prev/next handlers instead of inferring from indices. Wrapping navigation must carry its intended direction.
+**Rule:** When building carousel/cyclic navigation, always pass explicit direction. Don't infer it from index math — wrap-around breaks the comparison.
+
+---
+
 ## Known Broken (Not Yet Fixed)
 
 - `masked-line-reveal` — text not showing

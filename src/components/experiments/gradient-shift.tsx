@@ -92,9 +92,9 @@ export function GradientShift({ onReplay }: Props) {
             const cS = next.c.split(",")[1]?.trim();
             const cL = next.c.split(",")[2]?.trim();
 
-            el!.style.setProperty("--stop-a", `hsl(${colorProxy.aH}, ${aS} ${aL})`);
-            el!.style.setProperty("--stop-b", `hsl(${colorProxy.bH}, ${bS} ${bL})`);
-            el!.style.setProperty("--stop-c", `hsl(${colorProxy.cH}, ${cS} ${cL})`);
+            el!.style.setProperty("--stop-a", `hsl(${colorProxy.aH}, ${aS}, ${aL})`);
+            el!.style.setProperty("--stop-b", `hsl(${colorProxy.bH}, ${bS}, ${bL})`);
+            el!.style.setProperty("--stop-c", `hsl(${colorProxy.cH}, ${cS}, ${cL})`);
           },
         });
 

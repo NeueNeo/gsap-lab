@@ -42,7 +42,6 @@ import { ButtonFeedback } from "./experiments/button-feedback";
 import { HoverUnderline } from "./experiments/hover-underline";
 import { FlipExpand } from "./experiments/flip-expand";
 import { SvgLineArt } from "./experiments/svg-line-art";
-import { ClipPathMorph } from "./experiments/clip-path-morph";
 import { GradientShift } from "./experiments/gradient-shift";
 import { TimelineScroll } from "./experiments/timeline-scroll";
 import { CounterScroll } from "./experiments/counter-scroll";
@@ -69,7 +68,6 @@ import { CardStackFan } from "./experiments/card-stack-fan";
 import { SvgMaskTextReveal } from "./experiments/svg-mask-text-reveal";
 import { MorphingIcons } from "./experiments/morphing-icons";
 import { DrawSvgSignature } from "./experiments/drawsvg-signature";
-import { ScrollDirectionMarquee } from "./experiments/scroll-direction-marquee";
 import { DraggableMarquee } from "./experiments/draggable-marquee";
 import { PreloaderSequence } from "./experiments/preloader-sequence";
 import { InfiniteCardSlider } from "./experiments/infinite-card-slider";
@@ -82,6 +80,9 @@ import { Scroll3dTube } from "./experiments/scroll-3d-tube";
 import { CylinderGallery } from "./experiments/cylinder-gallery";
 import { PerspectiveCardStack } from "./experiments/perspective-card-stack";
 import { DoubleHelixText } from "./experiments/double-helix-text";
+import { CardCarousel } from "./experiments/card-carousel";
+import { ScrollHighlightReveal } from "./experiments/scroll-highlight-reveal";
+import { LetterRollupSnap } from "./experiments/letter-rollup-snap";
 
 const experimentComponents: Record<string, React.ComponentType<{ onReplay: () => void }>> = {
   "character-reveal": CharacterReveal,
@@ -124,7 +125,6 @@ const experimentComponents: Record<string, React.ComponentType<{ onReplay: () =>
   "hover-underline": HoverUnderline,
   "flip-expand": FlipExpand,
   "svg-line-art": SvgLineArt,
-  "clip-path-morph": ClipPathMorph,
   "gradient-shift": GradientShift,
   "timeline-scroll": TimelineScroll,
   "counter-scroll": CounterScroll,
@@ -151,7 +151,6 @@ const experimentComponents: Record<string, React.ComponentType<{ onReplay: () =>
   "svg-mask-text-reveal": SvgMaskTextReveal,
   "morphing-icons": MorphingIcons,
   "drawsvg-signature": DrawSvgSignature,
-  "scroll-direction-marquee": ScrollDirectionMarquee,
   "draggable-marquee": DraggableMarquee,
   "preloader-sequence": PreloaderSequence,
   "infinite-card-slider": InfiniteCardSlider,
@@ -164,6 +163,8 @@ const experimentComponents: Record<string, React.ComponentType<{ onReplay: () =>
   "cylinder-gallery": CylinderGallery,
   "perspective-card-stack": PerspectiveCardStack,
   "double-helix-text": DoubleHelixText,
+  "scroll-highlight-reveal": ScrollHighlightReveal,
+  "card-carousel": CardCarousel,
 };
 
 interface ExperimentCanvasProps {

@@ -29,7 +29,7 @@ interface Props {
 export function InfiniteCardSlider({ onReplay }: Props) {
   void onReplay;
   const containerRef = useRef<HTMLDivElement>(null);
-  const tlRef = useRef<gsap.core.Timeline | null>(null);
+  const tlRef = useRef<gsap.core.Tween | null>(null);
   const isDragging = useRef(false);
   const dragStartX = useRef(0);
   const lastX = useRef(0);
@@ -54,31 +54,22 @@ export function InfiniteCardSlider({ onReplay }: Props) {
       // Create the wrap function to keep cards cycling
       const wrap = gsap.utils.wrap(-cardWidth - gap, totalWidth - cardWidth - gap);
 
-      // Create a single master timeline that moves all cards left
-      const tl = gsap.timeline({ repeat: -1, paused: true });
-
-      // Animate xPercent of a proxy, then reposition cards
+      // Proxy drives the offset; onUpdate repositions all cards through wrap
       const proxy = { x: 0 };
-      const totalDist = totalWidth;
 
-      tl.to(proxy, {
-        x: -totalDist,
+      const tl = gsap.to(proxy, {
+        x: -totalWidth,
         duration: numCards * 4,
         ease: "none",
+        repeat: -1,
         onUpdate: () => {
-          const dx = proxy.x;
           cards.forEach((card, i) => {
-            const baseX = i * (cardWidth + gap) + dx;
-            const wrappedX = wrap(baseX);
-            gsap.set(card, { x: wrappedX });
+            const baseX = i * (cardWidth + gap) + proxy.x;
+            gsap.set(card, { x: wrap(baseX) });
           });
-        },
-        modifiers: {
-          x: gsap.utils.unitize((x) => parseFloat(x) % totalDist),
         },
       });
 
-      tl.play();
       tlRef.current = tl;
     },
     { scope: containerRef }

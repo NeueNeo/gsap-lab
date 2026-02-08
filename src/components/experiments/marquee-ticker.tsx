@@ -106,7 +106,7 @@ export function MarqueeTicker({ onReplay }: Props) {
         {/* Row 1 — Large, left-moving */}
         <div className="overflow-hidden whitespace-nowrap">
           <div className="ticker-row-1 inline-flex">
-            {[0, 1].map((copy) => (
+            {[0, 1, 2].map((copy) => (
               <div key={copy} className="ticker-group inline-flex items-center shrink-0">
                 {TICKER_ITEMS.map((item, i) => (
                   <span
@@ -125,7 +125,7 @@ export function MarqueeTicker({ onReplay }: Props) {
         {/* Row 2 — Medium, right-moving */}
         <div className="overflow-hidden whitespace-nowrap">
           <div className="ticker-row-2 inline-flex">
-            {[0, 1].map((copy) => (
+            {[0, 1, 2].map((copy) => (
               <div key={copy} className="ticker-group inline-flex items-center shrink-0">
                 {SECOND_ROW.map((item, i) => (
                   <span
@@ -143,7 +143,7 @@ export function MarqueeTicker({ onReplay }: Props) {
         {/* Row 3 — Small, left-moving, fastest */}
         <div className="overflow-hidden whitespace-nowrap">
           <div className="ticker-row-3 inline-flex">
-            {[0, 1].map((copy) => (
+            {[0, 1, 2].map((copy) => (
               <div key={copy} className="ticker-group inline-flex items-center shrink-0">
                 {TICKER_ITEMS.map((item, i) => (
                   <span
