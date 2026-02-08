@@ -1,68 +1,135 @@
+import { ChevronRight } from "lucide-react";
+import { categories, topLevelCount, type Experiment } from "@/lib/experiments";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+} from "@/components/ui/sidebar";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
-import { categories } from "@/lib/experiments";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
-
-interface SidebarProps {
+interface AppSidebarProps {
   activeId: string;
   onSelect: (id: string) => void;
 }
 
-export function Sidebar({ activeId, onSelect }: SidebarProps) {
+function ExperimentMenuItem({
+  exp,
+  activeId,
+  onSelect,
+}: {
+  exp: Experiment;
+  activeId: string;
+  onSelect: (id: string) => void;
+}) {
+  const hasChildren = exp.children && exp.children.length > 0;
+  const isActive = exp.id === activeId;
+  const childActive = hasChildren && exp.children!.some((c) => c.id === activeId);
+
+  if (!hasChildren) {
+    return (
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          isActive={isActive}
+          onClick={() => onSelect(exp.id)}
+          className="cursor-pointer"
+        >
+          <span>{exp.name}</span>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    );
+  }
+
   return (
-    <aside className="w-[280px] min-w-[280px] h-screen bg-zinc-900 border-r border-zinc-800 flex flex-col">
-      <div className="px-5 py-5 border-b border-zinc-800">
-        <h1 className="text-lg font-semibold tracking-tight text-zinc-100">
-          GSAP Lab
-        </h1>
-        <p className="text-xs font-mono text-zinc-500 mt-1">
-          18 animation experiments
-        </p>
-      </div>
-      <ScrollArea className="flex-1 overflow-hidden">
-        <nav className="py-3">
-          {categories.map((cat) => (
-            <div key={cat.name} className="mb-2">
-              <div className="px-5 py-2">
-                <span className="text-[11px] font-mono font-medium uppercase tracking-widest text-zinc-500">
-                  {cat.name}
-                </span>
-                <Badge
-                  variant="secondary"
-                  className="ml-2 text-[10px] px-1.5 py-0 h-4 bg-zinc-800 text-zinc-500 border-0"
+    <Collapsible asChild defaultOpen={isActive || childActive} className="group/collapsible">
+      <SidebarMenuItem>
+        <div className="relative">
+          <SidebarMenuButton
+            isActive={isActive || childActive}
+            onClick={() => onSelect(exp.id)}
+            tooltip={exp.name}
+            className="cursor-pointer pr-8"
+          >
+            <span>{exp.name}</span>
+          </SidebarMenuButton>
+          <CollapsibleTrigger asChild>
+            <button className="absolute right-1 top-1/2 -translate-y-1/2 p-1 rounded-sm text-sidebar-foreground/50 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors">
+              <ChevronRight className="size-3.5 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+            </button>
+          </CollapsibleTrigger>
+        </div>
+        <CollapsibleContent>
+          <SidebarMenuSub>
+            {exp.children!.map((child) => (
+              <SidebarMenuSubItem key={child.id}>
+                <SidebarMenuSubButton
+                  isActive={child.id === activeId}
+                  onClick={() => onSelect(child.id)}
+                  className="cursor-pointer"
                 >
-                  {cat.experiments.length}
-                </Badge>
-              </div>
-              {cat.experiments.map((exp) => {
-                const isActive = exp.id === activeId;
-                return (
-                  <button
+                  <span>{child.name}</span>
+                </SidebarMenuSubButton>
+              </SidebarMenuSubItem>
+            ))}
+          </SidebarMenuSub>
+        </CollapsibleContent>
+      </SidebarMenuItem>
+    </Collapsible>
+  );
+}
+
+export function AppSidebar({ activeId, onSelect }: AppSidebarProps) {
+  return (
+    <Sidebar>
+      <SidebarHeader className="px-4 py-4">
+        <h1 className="text-lg font-semibold tracking-tight">GSAP Lab</h1>
+        <p className="text-xs font-mono text-sidebar-foreground/50">
+          {topLevelCount} animation experiments
+        </p>
+      </SidebarHeader>
+      <SidebarContent>
+        {categories.map((cat) => (
+          <SidebarGroup key={cat.name}>
+            <SidebarGroupLabel className="uppercase tracking-widest text-[11px] font-mono">
+              {cat.name}
+              <SidebarMenuBadge className="ml-2 text-[10px]">
+                {cat.experiments.length}
+              </SidebarMenuBadge>
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {cat.experiments.map((exp) => (
+                  <ExperimentMenuItem
                     key={exp.id}
-                    onClick={() => onSelect(exp.id)}
-                    className={`w-full text-left px-5 py-2 text-sm transition-colors duration-150 relative group ${
-                      isActive
-                        ? "bg-zinc-800/70 text-zinc-100"
-                        : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/30"
-                    }`}
-                  >
-                    {isActive && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-emerald-400 rounded-r-sm" />
-                    )}
-                    <span className="pl-1">{exp.name}</span>
-                  </button>
-                );
-              })}
-            </div>
-          ))}
-          <div className="h-6" aria-hidden="true" />
-        </nav>
-      </ScrollArea>
-      <div className="px-5 py-4 border-t border-zinc-800">
-        <p className="text-[11px] font-mono text-zinc-600">
+                    exp={exp}
+                    activeId={activeId}
+                    onSelect={onSelect}
+                  />
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
+      </SidebarContent>
+      <SidebarFooter className="px-4 py-3">
+        <p className="text-[11px] font-mono text-sidebar-foreground/30">
           Built with GSAP + React + Vite
         </p>
-      </div>
-    </aside>
+      </SidebarFooter>
+    </Sidebar>
   );
 }

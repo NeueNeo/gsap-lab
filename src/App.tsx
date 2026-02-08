@@ -1,14 +1,17 @@
 import { useState } from "react";
-import { Sidebar } from "@/components/sidebar";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/sidebar";
 import { ExperimentCanvas } from "@/components/experiment-canvas";
 
 export function App() {
   const [activeId, setActiveId] = useState<string>("character-reveal");
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <Sidebar activeId={activeId} onSelect={setActiveId} />
-      <ExperimentCanvas activeId={activeId} onReplay={() => setActiveId((prev) => prev)} />
-    </div>
+    <SidebarProvider>
+      <AppSidebar activeId={activeId} onSelect={setActiveId} />
+      <SidebarInset>
+        <ExperimentCanvas activeId={activeId} onReplay={() => setActiveId((prev) => prev)} />
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

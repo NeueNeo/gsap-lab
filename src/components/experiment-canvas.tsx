@@ -3,6 +3,10 @@ import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { allExperiments } from "@/lib/experiments";
 import { CharacterReveal } from "./experiments/character-reveal";
+import { CharacterRevealVariant } from "./experiments/character-reveal-variant";
+import { LetterRollupVariant } from "./experiments/letter-rollup-variant";
+import { HoverUnderlineVariant } from "./experiments/hover-underline-variant";
+import { ButtonFeedbackVariant } from "./experiments/button-feedback-variant";
 import { Typewriter } from "./experiments/typewriter";
 import { ScrambleText } from "./experiments/scramble-text";
 import { StaggerGrid } from "./experiments/stagger-grid";
@@ -79,8 +83,32 @@ import { CardCarousel } from "./experiments/card-carousel";
 import { ScrollHighlightReveal } from "./experiments/scroll-highlight-reveal";
 import { LetterRollupSnap } from "./experiments/letter-rollup-snap";
 
+/* eslint-disable react/display-name */
+const crVariant = (v: "slide-up" | "scale-pop" | "blur-in" | "slide-right" | "flip-in" | "word-scale") =>
+  (props: { onReplay: () => void }) => <CharacterRevealVariant {...props} variant={v} />;
+
 const experimentComponents: Record<string, React.ComponentType<{ onReplay: () => void }>> = {
   "character-reveal": CharacterReveal,
+  "character-reveal--slide-up": crVariant("slide-up"),
+  "character-reveal--scale-pop": crVariant("scale-pop"),
+  "character-reveal--blur-in": crVariant("blur-in"),
+  "character-reveal--slide-right": crVariant("slide-right"),
+  "character-reveal--flip-in": crVariant("flip-in"),
+  "character-reveal--word-scale": crVariant("word-scale"),
+  "letter-rollup--sequential": (p: { onReplay: () => void }) => <LetterRollupVariant {...p} variant="sequential" />,
+  "letter-rollup--random": (p: { onReplay: () => void }) => <LetterRollupVariant {...p} variant="random" />,
+  "letter-rollup--from-center": (p: { onReplay: () => void }) => <LetterRollupVariant {...p} variant="from-center" />,
+  "letter-rollup--from-edges": (p: { onReplay: () => void }) => <LetterRollupVariant {...p} variant="from-edges" />,
+  "hover-underline--wipe": (p: { onReplay: () => void }) => <HoverUnderlineVariant {...p} variant="wipe" />,
+  "hover-underline--center": (p: { onReplay: () => void }) => <HoverUnderlineVariant {...p} variant="center" />,
+  "hover-underline--elastic": (p: { onReplay: () => void }) => <HoverUnderlineVariant {...p} variant="elastic" />,
+  "hover-underline--morph": (p: { onReplay: () => void }) => <HoverUnderlineVariant {...p} variant="morph" />,
+  "hover-underline--slide": (p: { onReplay: () => void }) => <HoverUnderlineVariant {...p} variant="slide" />,
+  "button-feedback--press-scale": (p: { onReplay: () => void }) => <ButtonFeedbackVariant {...p} variant="press-scale" />,
+  "button-feedback--ripple": (p: { onReplay: () => void }) => <ButtonFeedbackVariant {...p} variant="ripple" />,
+  "button-feedback--magnetic-pull": (p: { onReplay: () => void }) => <ButtonFeedbackVariant {...p} variant="magnetic-pull" />,
+  "button-feedback--success-check": (p: { onReplay: () => void }) => <ButtonFeedbackVariant {...p} variant="success-check" />,
+  "button-feedback--jelly-bounce": (p: { onReplay: () => void }) => <ButtonFeedbackVariant {...p} variant="jelly-bounce" />,
   "typewriter": Typewriter,
   "scramble-text": ScrambleText,
   "stagger-grid": StaggerGrid,

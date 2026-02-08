@@ -2,6 +2,7 @@ export interface Experiment {
   id: string;
   name: string;
   category: string;
+  children?: Experiment[];
 }
 
 export interface Category {
@@ -13,14 +14,36 @@ export const categories: Category[] = [
   {
     name: "Text",
     experiments: [
-      { id: "character-reveal", name: "Character Reveal", category: "Text" },
+      {
+        id: "character-reveal",
+        name: "Character Reveal",
+        category: "Text",
+        children: [
+          { id: "character-reveal--slide-up", name: "Slide Up", category: "Text" },
+          { id: "character-reveal--scale-pop", name: "Scale Pop", category: "Text" },
+          { id: "character-reveal--blur-in", name: "Blur In", category: "Text" },
+          { id: "character-reveal--slide-right", name: "Slide Right", category: "Text" },
+          { id: "character-reveal--flip-in", name: "Flip In", category: "Text" },
+          { id: "character-reveal--word-scale", name: "Word Scale", category: "Text" },
+        ],
+      },
       { id: "typewriter", name: "Typewriter", category: "Text" },
       { id: "scramble-text", name: "Scramble Text", category: "Text" },
       { id: "split-scatter", name: "Split & Scatter", category: "Text" },
       { id: "glitch-text", name: "Glitch Text", category: "Text" },
       { id: "rolling-text", name: "Rolling Text", category: "Text" },
       { id: "text-wave", name: "Text Wave", category: "Text" },
-      { id: "letter-rollup", name: "Letter Rollup", category: "Text" },
+      {
+        id: "letter-rollup",
+        name: "Letter Rollup",
+        category: "Text",
+        children: [
+          { id: "letter-rollup--sequential", name: "Sequential", category: "Text" },
+          { id: "letter-rollup--random", name: "Random", category: "Text" },
+          { id: "letter-rollup--from-center", name: "From Center", category: "Text" },
+          { id: "letter-rollup--from-edges", name: "From Edges", category: "Text" },
+        ],
+      },
       { id: "number-counter", name: "Number Counter", category: "Text" },
       { id: "cylinder-text", name: "Cylinder Text", category: "Text" },
       { id: "zipper-text-reveal", name: "Zipper Text Reveal", category: "Text" },
@@ -95,8 +118,30 @@ export const categories: Category[] = [
     name: "Buttons & Hover",
     experiments: [
       { id: "magnetic-button", name: "Magnetic Buttons", category: "Buttons & Hover" },
-      { id: "button-feedback", name: "Button Feedback", category: "Buttons & Hover" },
-      { id: "hover-underline", name: "Hover Underline", category: "Buttons & Hover" },
+      {
+        id: "button-feedback",
+        name: "Button Feedback",
+        category: "Buttons & Hover",
+        children: [
+          { id: "button-feedback--press-scale", name: "Press Scale", category: "Buttons & Hover" },
+          { id: "button-feedback--ripple", name: "Ripple", category: "Buttons & Hover" },
+          { id: "button-feedback--magnetic-pull", name: "Magnetic Pull", category: "Buttons & Hover" },
+          { id: "button-feedback--success-check", name: "Success Checkmark", category: "Buttons & Hover" },
+          { id: "button-feedback--jelly-bounce", name: "Jelly Bounce", category: "Buttons & Hover" },
+        ],
+      },
+      {
+        id: "hover-underline",
+        name: "Hover Underline",
+        category: "Buttons & Hover",
+        children: [
+          { id: "hover-underline--wipe", name: "Left to Right Wipe", category: "Buttons & Hover" },
+          { id: "hover-underline--center", name: "Center Expand", category: "Buttons & Hover" },
+          { id: "hover-underline--elastic", name: "Elastic Bounce", category: "Buttons & Hover" },
+          { id: "hover-underline--morph", name: "Thick to Thin Morph", category: "Buttons & Hover" },
+          { id: "hover-underline--slide", name: "Slide Through", category: "Buttons & Hover" },
+        ],
+      },
       { id: "drawsvg-scribble-underline", name: "DrawSVG Scribble Underline", category: "Buttons & Hover" },
       { id: "elastic-menus", name: "Elastic Menus", category: "Buttons & Hover" },
       { id: "macos-dock-effect", name: "macOS Dock Effect", category: "Buttons & Hover" },
@@ -137,4 +182,8 @@ export const categories: Category[] = [
   },
 ];
 
-export const allExperiments = categories.flatMap((c) => c.experiments);
+export const allExperiments = categories.flatMap((c) =>
+  c.experiments.flatMap((e) => [e, ...(e.children ?? [])])
+);
+
+export const topLevelCount = categories.reduce((sum, c) => sum + c.experiments.length, 0);
