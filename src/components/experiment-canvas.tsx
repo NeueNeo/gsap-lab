@@ -11,7 +11,6 @@ import { CardFlip } from "./experiments/card-flip";
 import { ExpandingCard } from "./experiments/expanding-card";
 import { ShuffleGrid } from "./experiments/shuffle-grid";
 import { ParallaxLayers } from "./experiments/parallax-layers";
-import { PinAndReveal } from "./experiments/pin-and-reveal";
 import { ProgressBar } from "./experiments/progress-bar";
 import { MagneticButton } from "./experiments/magnetic-button";
 import { DraggableCards } from "./experiments/draggable-cards";
@@ -42,8 +41,6 @@ import { OrbitAnimation } from "./experiments/orbit-animation";
 import { CardTilt3d } from "./experiments/card-tilt-3d";
 import { ButtonFeedback } from "./experiments/button-feedback";
 import { HoverUnderline } from "./experiments/hover-underline";
-import { LiquidButton } from "./experiments/liquid-button";
-import { FlipGrid } from "./experiments/flip-grid";
 import { FlipExpand } from "./experiments/flip-expand";
 import { SvgLineArt } from "./experiments/svg-line-art";
 import { ClipPathMorph } from "./experiments/clip-path-morph";
@@ -54,6 +51,38 @@ import { ParallaxImages } from "./experiments/parallax-images";
 import { StackingPages } from "./experiments/stacking-pages";
 import { StackingPagesFade } from "./experiments/stacking-pages-fade";
 import { ParallaxDepthField } from "./experiments/parallax-depth-field";
+import { ParallaxHover } from "./experiments/parallax-hover";
+import { ZipperTextReveal } from "./experiments/zipper-text-reveal";
+import { VariableFontWave } from "./experiments/variable-font-wave";
+import { ElasticDragText } from "./experiments/elastic-drag-text";
+import { MaskedLineReveal } from "./experiments/masked-line-reveal";
+import { HorizontalScrollPanels } from "./experiments/horizontal-scroll-panels";
+import { ScrollDirectionReveal } from "./experiments/scroll-direction-reveal";
+import { PinMultiStep } from "./experiments/pin-multi-step";
+import { StaggerBarsWipe } from "./experiments/stagger-bars-wipe";
+import { BlurScaleTransition } from "./experiments/blur-scale-transition";
+import { DrawSvgScribbleUnderline } from "./experiments/drawsvg-scribble-underline";
+import { CursorTrail } from "./experiments/cursor-trail";
+import { VelocityCursor } from "./experiments/velocity-cursor";
+import { FlipAddToCart } from "./experiments/flip-add-to-cart";
+import { InertiaDotGrid } from "./experiments/inertia-dot-grid";
+import { CardStackFan } from "./experiments/card-stack-fan";
+import { SvgMaskTextReveal } from "./experiments/svg-mask-text-reveal";
+import { MorphingIcons } from "./experiments/morphing-icons";
+import { DrawSvgSignature } from "./experiments/drawsvg-signature";
+import { ScrollDirectionMarquee } from "./experiments/scroll-direction-marquee";
+import { DraggableMarquee } from "./experiments/draggable-marquee";
+import { PreloaderSequence } from "./experiments/preloader-sequence";
+import { InfiniteCardSlider } from "./experiments/infinite-card-slider";
+import { PhysicsDotsLoader } from "./experiments/physics-dots-loader";
+import { CursorImagePreview } from "./experiments/cursor-image-preview";
+import { MacosDockEffect } from "./experiments/macos-dock-effect";
+import { SpotlightReveal } from "./experiments/spotlight-reveal";
+import { CursorRipple } from "./experiments/cursor-ripple";
+import { Scroll3dTube } from "./experiments/scroll-3d-tube";
+import { CylinderGallery } from "./experiments/cylinder-gallery";
+import { PerspectiveCardStack } from "./experiments/perspective-card-stack";
+import { DoubleHelixText } from "./experiments/double-helix-text";
 
 const experimentComponents: Record<string, React.ComponentType<{ onReplay: () => void }>> = {
   "character-reveal": CharacterReveal,
@@ -64,7 +93,6 @@ const experimentComponents: Record<string, React.ComponentType<{ onReplay: () =>
   "expanding-card": ExpandingCard,
   "shuffle-grid": ShuffleGrid,
   "parallax-layers": ParallaxLayers,
-  "pin-and-reveal": PinAndReveal,
   "progress-bar": ProgressBar,
   "magnetic-button": MagneticButton,
   "draggable-cards": DraggableCards,
@@ -95,8 +123,6 @@ const experimentComponents: Record<string, React.ComponentType<{ onReplay: () =>
   "card-tilt-3d": CardTilt3d,
   "button-feedback": ButtonFeedback,
   "hover-underline": HoverUnderline,
-  "liquid-button": LiquidButton,
-  "flip-grid": FlipGrid,
   "flip-expand": FlipExpand,
   "svg-line-art": SvgLineArt,
   "clip-path-morph": ClipPathMorph,
@@ -107,6 +133,38 @@ const experimentComponents: Record<string, React.ComponentType<{ onReplay: () =>
   "stacking-pages": StackingPages,
   "stacking-pages-fade": StackingPagesFade,
   "parallax-depth-field": ParallaxDepthField,
+  "parallax-hover": ParallaxHover,
+  "zipper-text-reveal": ZipperTextReveal,
+  "variable-font-wave": VariableFontWave,
+  "elastic-drag-text": ElasticDragText,
+  "masked-line-reveal": MaskedLineReveal,
+  "horizontal-scroll-panels": HorizontalScrollPanels,
+  "scroll-direction-reveal": ScrollDirectionReveal,
+  "pin-multi-step": PinMultiStep,
+  "stagger-bars-wipe": StaggerBarsWipe,
+  "blur-scale-transition": BlurScaleTransition,
+  "drawsvg-scribble-underline": DrawSvgScribbleUnderline,
+  "cursor-trail": CursorTrail,
+  "velocity-cursor": VelocityCursor,
+  "flip-add-to-cart": FlipAddToCart,
+  "inertia-dot-grid": InertiaDotGrid,
+  "card-stack-fan": CardStackFan,
+  "svg-mask-text-reveal": SvgMaskTextReveal,
+  "morphing-icons": MorphingIcons,
+  "drawsvg-signature": DrawSvgSignature,
+  "scroll-direction-marquee": ScrollDirectionMarquee,
+  "draggable-marquee": DraggableMarquee,
+  "preloader-sequence": PreloaderSequence,
+  "infinite-card-slider": InfiniteCardSlider,
+  "physics-dots-loader": PhysicsDotsLoader,
+  "cursor-image-preview": CursorImagePreview,
+  "macos-dock-effect": MacosDockEffect,
+  "spotlight-reveal": SpotlightReveal,
+  "cursor-ripple": CursorRipple,
+  "scroll-3d-tube": Scroll3dTube,
+  "cylinder-gallery": CylinderGallery,
+  "perspective-card-stack": PerspectiveCardStack,
+  "double-helix-text": DoubleHelixText,
 };
 
 interface ExperimentCanvasProps {
