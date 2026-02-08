@@ -14,7 +14,6 @@ import { ProgressBar } from "./experiments/progress-bar";
 import { MagneticButton } from "./experiments/magnetic-button";
 import { DraggableCards } from "./experiments/draggable-cards";
 import { ElasticMenus } from "./experiments/elastic-menus";
-import { BouncingBalls } from "./experiments/bouncing-balls";
 import { SvgPathDraw } from "./experiments/svg-path-draw";
 import { MorphingShape } from "./experiments/morphing-shape";
 import { NumberCounter } from "./experiments/number-counter";
@@ -76,10 +75,6 @@ import { CursorImagePreview } from "./experiments/cursor-image-preview";
 import { MacosDockEffect } from "./experiments/macos-dock-effect";
 import { SpotlightReveal } from "./experiments/spotlight-reveal";
 import { CursorRipple } from "./experiments/cursor-ripple";
-import { Scroll3dTube } from "./experiments/scroll-3d-tube";
-import { CylinderGallery } from "./experiments/cylinder-gallery";
-import { PerspectiveCardStack } from "./experiments/perspective-card-stack";
-import { DoubleHelixText } from "./experiments/double-helix-text";
 import { CardCarousel } from "./experiments/card-carousel";
 import { ScrollHighlightReveal } from "./experiments/scroll-highlight-reveal";
 import { LetterRollupSnap } from "./experiments/letter-rollup-snap";
@@ -97,7 +92,6 @@ const experimentComponents: Record<string, React.ComponentType<{ onReplay: () =>
   "magnetic-button": MagneticButton,
   "draggable-cards": DraggableCards,
   "elastic-menus": ElasticMenus,
-  "bouncing-balls": BouncingBalls,
   "svg-path-draw": SvgPathDraw,
   "morphing-shape": MorphingShape,
   "number-counter": NumberCounter,
@@ -159,10 +153,6 @@ const experimentComponents: Record<string, React.ComponentType<{ onReplay: () =>
   "macos-dock-effect": MacosDockEffect,
   "spotlight-reveal": SpotlightReveal,
   "cursor-ripple": CursorRipple,
-  "scroll-3d-tube": Scroll3dTube,
-  "cylinder-gallery": CylinderGallery,
-  "perspective-card-stack": PerspectiveCardStack,
-  "double-helix-text": DoubleHelixText,
   "scroll-highlight-reveal": ScrollHighlightReveal,
   "card-carousel": CardCarousel,
 };

@@ -1,5 +1,4 @@
-
-import { useRef, useCallback, useState } from "react";
+import { useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
@@ -21,10 +20,7 @@ export function CursorImagePreview({ onReplay }: Props) {
   void onReplay;
   const containerRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
-  const cardNameRef = useRef<HTMLSpanElement>(null);
-  const quickX = useRef<gsap.QuickToFunc | null>(null);
-  const quickY = useRef<gsap.QuickToFunc | null>(null);
-  const [activeGradient, setActiveGradient] = useState(ITEMS[0].gradient);
+  const [active, setActive] = useState(0);
 
   useGSAP(
     () => {
@@ -37,97 +33,84 @@ export function CursorImagePreview({ onReplay }: Props) {
         delay: 0.3,
       });
 
-      const card = cardRef.current;
-      if (!card) return;
-
-      quickX.current = gsap.quickTo(card, "x", { duration: 0.4, ease: "power3" });
-      quickY.current = gsap.quickTo(card, "y", { duration: 0.4, ease: "power3" });
+      gsap.from(".preview-card", {
+        scale: 0.9,
+        opacity: 0,
+        duration: 0.6,
+        ease: "back.out(1.4)",
+        delay: 0.5,
+      });
     },
     { scope: containerRef }
   );
 
-  const handleItemEnter = useCallback((item: typeof ITEMS[0]) => {
-    setActiveGradient(item.gradient);
-    if (cardNameRef.current) cardNameRef.current.textContent = item.name;
-    gsap.to(cardRef.current, { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" });
-  }, []);
+  const handleHover = (idx: number) => {
+    if (idx === active) return;
+    setActive(idx);
 
-  const handleItemLeave = useCallback(() => {
-    gsap.to(cardRef.current, { opacity: 0, scale: 0.9, duration: 0.25, ease: "power2.in" });
-  }, []);
+    const card = cardRef.current;
+    if (!card) return;
 
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    const rect = containerRef.current?.getBoundingClientRect();
-    if (!rect) return;
-
-    const x = e.clientX - rect.left + 20;
-    const y = e.clientY - rect.top + 20;
-
-    quickX.current?.(x);
-    quickY.current?.(y);
-  }, []);
+    // Quick crossfade
+    gsap.fromTo(
+      card,
+      { opacity: 0.5, y: 8 },
+      { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }
+    );
+  };
 
   return (
     <div
       ref={containerRef}
-      className="flex flex-col items-center justify-center h-full p-8 gap-6"
-      onMouseMove={handleMouseMove}
+      className="flex items-center justify-center h-full p-8 gap-12"
     >
-      <p className="text-xs font-mono text-zinc-500">
-        gsap.quickTo() · cursor-following preview card · mouseenter / mouseleave per item
-      </p>
-
-      <div className="relative w-full max-w-md">
-        <div className="flex flex-col gap-1">
-          {ITEMS.map((item, i) => (
-            <div
-              key={i}
-              className="preview-list-item group flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-colors hover:bg-zinc-800/50"
-              onMouseEnter={() => handleItemEnter(item)}
-              onMouseLeave={handleItemLeave}
-            >
-              <div
-                className="w-3 h-3 rounded-full shrink-0"
-                style={{ background: item.gradient }}
-              />
-              <span className="text-base font-medium text-zinc-300 group-hover:text-zinc-100 transition-colors">
-                {item.name}
-              </span>
-              <svg width="16" height="16" viewBox="0 0 16 16" className="ml-auto text-zinc-600 group-hover:text-zinc-400 transition-colors">
-                <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-          ))}
-        </div>
-
-        {/* Floating preview card */}
-        <div
-          ref={cardRef}
-          className="absolute top-0 left-0 pointer-events-none will-change-transform z-10"
-          style={{ opacity: 0, transform: "scale(0.9)" }}
-        >
+      {/* List */}
+      <div className="flex flex-col gap-1 w-64">
+        <p className="text-[10px] font-mono text-zinc-600 mb-3 tracking-widest uppercase">
+          Hover to preview
+        </p>
+        {ITEMS.map((item, i) => (
           <div
-            className="rounded-xl overflow-hidden shadow-2xl shadow-black/50"
-            style={{ width: 200, height: 150 }}
+            key={i}
+            className="preview-list-item group flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-colors"
+            style={{ backgroundColor: i === active ? "rgba(255,255,255,0.05)" : "transparent" }}
+            onMouseEnter={() => handleHover(i)}
           >
             <div
-              className="w-full h-full flex items-end p-3"
-              style={{ background: activeGradient }}
+              className="w-3 h-3 rounded-full shrink-0"
+              style={{ background: item.gradient }}
+            />
+            <span
+              className="text-base font-medium transition-colors"
+              style={{ color: i === active ? "#e4e4e7" : "#a1a1aa" }}
             >
-              <span
-                ref={cardNameRef}
-                className="text-sm font-semibold text-white/90 drop-shadow-md"
-              >
-                {ITEMS[0].name}
-              </span>
-            </div>
+              {item.name}
+            </span>
+            <svg width="16" height="16" viewBox="0 0 16 16" className="ml-auto text-zinc-600 group-hover:text-zinc-400 transition-colors">
+              <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </div>
-        </div>
+        ))}
       </div>
 
-      <p className="text-[10px] font-mono text-zinc-600">
-        hover list items · preview follows cursor with 20px offset · quickTo smooth tracking
-      </p>
+      {/* Preview card — fixed position, changes on hover */}
+      <div
+        ref={cardRef}
+        className="preview-card rounded-2xl overflow-hidden shadow-2xl shadow-black/40 border border-zinc-800"
+        style={{ width: 280, height: 200 }}
+      >
+        <div
+          className="w-full h-full flex flex-col justify-end p-5 transition-all duration-300"
+          style={{ background: ITEMS[active].gradient }}
+        >
+          <span className="text-xs font-mono text-white/50 mb-1">
+            {String(active + 1).padStart(2, "0")}
+          </span>
+          <span className="text-xl font-bold text-white drop-shadow-md">
+            {ITEMS[active].name}
+          </span>
+        </div>
+      </div>
     </div>
   );
 }

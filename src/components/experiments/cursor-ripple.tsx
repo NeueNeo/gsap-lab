@@ -48,20 +48,17 @@ export function CursorRipple({ onReplay }: Props) {
       pointer-events: none;
       will-change: transform, opacity;
       transform: scale(0);
-      opacity: 0;
+      opacity: 1;
     `;
     field.appendChild(el);
     rippleCount.current++;
 
     gsap.to(el, {
-      scale: 15,
+      scale: 3,
       opacity: 0,
       duration: 1.2,
       delay,
       ease: "power2.out",
-      onStart: () => {
-        gsap.set(el, { opacity: 1 });
-      },
       onComplete: () => {
         el.remove();
         rippleCount.current--;
@@ -80,12 +77,10 @@ export function CursorRipple({ onReplay }: Props) {
 
     setClickCount((c) => c + 1);
 
-    // Primary ripple — emerald
-    spawnRipple(x, y, "rgb(52, 211, 153)", 0, 20);
+    spawnRipple(x, y, "rgb(52, 211, 153)", 0, 80);
 
-    // Secondary ripple — cyan, slightly delayed and larger start
     if (rippleCount.current < MAX_RIPPLES - 1) {
-      spawnRipple(x, y, "rgb(6, 182, 212)", 0.1, 16);
+      spawnRipple(x, y, "rgb(6, 182, 212)", 0.1, 60);
     }
   }, [spawnRipple]);
 

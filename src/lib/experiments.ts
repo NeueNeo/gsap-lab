@@ -133,16 +133,6 @@ export const categories: Category[] = [
       { id: "preloader-sequence", name: "Preloader Sequence", category: "Loaders & Loops" },
       { id: "physics-dots-loader", name: "Physics Dots Loader", category: "Loaders & Loops" },
       { id: "orbit-animation", name: "Orbit Animation", category: "Loaders & Loops" },
-      { id: "bouncing-balls", name: "Bouncing Balls", category: "Loaders & Loops" },
-    ],
-  },
-  {
-    name: "3D & Perspective",
-    experiments: [
-      { id: "scroll-3d-tube", name: "Scroll 3D Tube", category: "3D & Perspective" },
-      { id: "cylinder-gallery", name: "Cylinder Gallery", category: "3D & Perspective" },
-      { id: "perspective-card-stack", name: "Perspective Card Stack", category: "3D & Perspective" },
-      { id: "double-helix-text", name: "Double Helix Text", category: "3D & Perspective" },
     ],
   },
 ];

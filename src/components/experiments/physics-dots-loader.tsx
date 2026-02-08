@@ -39,7 +39,7 @@ export function PhysicsDotsLoader({ onReplay }: Props) {
         // Start elevated
         dotTl.set(dot, { y: dropHeight });
         if (shadow) {
-          dotTl.set(shadow, { scale: 0.3, opacity: 0.1 });
+          dotTl.set(shadow, { scale: 0.8, opacity: 0.4 });
         }
 
         // Fall down (accelerating — gravity feel)
@@ -156,10 +156,10 @@ export function PhysicsDotsLoader({ onReplay }: Props) {
           }
         });
 
-        // Settle
+        // Settle — match the resting state to the starting set() values so the loop is seamless
         dotTl.to(dot, { y: baseY, duration: 0.1, ease: "power1.out" });
         if (shadow) {
-          dotTl.to(shadow, { scale: 0.8, opacity: 0.3, duration: 0.1 }, "<");
+          dotTl.to(shadow, { scale: 0.8, opacity: 0.4, duration: 0.3, ease: "power2.out" }, "<");
         }
 
         // Add to master with stagger
@@ -196,7 +196,7 @@ export function PhysicsDotsLoader({ onReplay }: Props) {
           {Array.from({ length: NUM_DOTS }).map((_, i) => (
             <div key={i} className="flex flex-col items-center">
               {/* Dot */}
-              <div className="relative" style={{ height: 140 }}>
+              <div className="relative" style={{ height: 140, width: DOT_SIZE }}>
                 <div
                   className="pdl-dot absolute bottom-0 rounded-full bg-emerald-400"
                   style={{
