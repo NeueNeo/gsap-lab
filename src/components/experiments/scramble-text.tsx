@@ -56,7 +56,7 @@ export function ScrambleText({ onReplay }: Props) {
             newMask[i] = true;
             continue;
           }
-          const charThreshold = i / WAVE_TEXT.length;
+          const charThreshold = (i / WAVE_TEXT.length) * 0.7;
           if (p > charThreshold + 0.3) {
             newChars[i] = WAVE_TEXT[i];
             newMask[i] = true;
@@ -134,13 +134,9 @@ export function ScrambleText({ onReplay }: Props) {
       ref={containerRef}
       className="flex flex-col items-center justify-center h-full p-8 gap-12"
     >
-      <p className="text-xs font-mono text-zinc-500 tracking-widest uppercase">
-        Scramble Text
-      </p>
-
       {/* Wave Scramble */}
       <div className="flex flex-col items-center gap-3">
-        <div className="text-5xl font-bold font-mono tracking-widest text-zinc-100">
+        <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold font-mono tracking-widest text-zinc-100 max-[480px]:flex max-[480px]:flex-wrap max-[480px]:justify-center">
           {waveChars.map((char, i) => (
             <span
               key={i}
@@ -152,16 +148,13 @@ export function ScrambleText({ onReplay }: Props) {
             </span>
           ))}
         </div>
-        <p className="text-[10px] font-mono text-zinc-600">
-          parallel wave · all characters scramble simultaneously
-        </p>
       </div>
 
       <div className="w-48 h-px bg-zinc-800" />
 
       {/* Sequential Decode */}
       <div className="flex flex-col items-center gap-3">
-        <div className="font-mono text-5xl tracking-[0.12em]">
+        <div className="font-mono text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-[0.12em] max-[480px]:flex max-[480px]:flex-wrap max-[480px]:justify-center">
           {decodeChars.map((char, i) => (
             <span
               key={i}
@@ -180,14 +173,11 @@ export function ScrambleText({ onReplay }: Props) {
             }`}
           />
         </div>
-        <p className="text-[10px] font-mono text-zinc-600">
-          sequential decode · one character at a time
-          {!decodeComplete && (
-            <span className="ml-2 text-cyan-800">
-              [{Math.round((cursorPos / DECODE_TEXT.length) * 100)}%]
-            </span>
-          )}
-        </p>
+        {!decodeComplete && (
+          <p className="text-[10px] font-mono text-cyan-800">
+            [{Math.round((cursorPos / DECODE_TEXT.length) * 100)}%]
+          </p>
+        )}
       </div>
 
       <style>{`

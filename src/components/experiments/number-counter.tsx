@@ -68,7 +68,7 @@ export function NumberCounter({ onReplay }: Props) {
       ref={containerRef}
       className="flex items-center justify-center h-full p-8"
     >
-      <div className="grid grid-cols-2 gap-6 max-w-2xl w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl w-full">
         {COUNTERS.map((counter, i) => {
           const isDecimal = counter.target % 1 !== 0;
           return (

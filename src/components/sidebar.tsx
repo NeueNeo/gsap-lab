@@ -1,4 +1,6 @@
-import { ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ChevronRight, X } from "lucide-react";
+import { useSidebar } from "@/components/ui/sidebar";
 import { categories, topLevelCount, type Experiment } from "@/lib/experiments";
 import {
   Sidebar,
@@ -27,18 +29,34 @@ interface AppSidebarProps {
   onSelect: (id: string) => void;
 }
 
+/** Find which parent experiment owns this activeId (if any) */
+function findParentId(activeId: string): string | null {
+  for (const cat of categories) {
+    for (const exp of cat.experiments) {
+      if (exp.id === activeId) return exp.children ? exp.id : null;
+      if (exp.children?.some((c) => c.id === activeId)) return exp.id;
+    }
+  }
+  return null;
+}
+
 function ExperimentMenuItem({
   exp,
   activeId,
+  expandedId,
   onSelect,
+  onToggle,
 }: {
   exp: Experiment;
   activeId: string;
+  expandedId: string | null;
   onSelect: (id: string) => void;
+  onToggle: (id: string) => void;
 }) {
   const hasChildren = exp.children && exp.children.length > 0;
   const isActive = exp.id === activeId;
   const childActive = hasChildren && exp.children!.some((c) => c.id === activeId);
+  const isExpanded = expandedId === exp.id;
 
   if (!hasChildren) {
     return (
@@ -55,12 +73,12 @@ function ExperimentMenuItem({
   }
 
   return (
-    <Collapsible asChild defaultOpen={isActive || childActive} className="group/collapsible">
+    <Collapsible asChild open={isExpanded} onOpenChange={() => onToggle(exp.id)} className="group/collapsible">
       <SidebarMenuItem>
         <div className="relative">
           <SidebarMenuButton
             isActive={isActive || childActive}
-            onClick={() => onSelect(exp.id)}
+            onClick={() => onToggle(exp.id)}
             tooltip={exp.name}
             className="cursor-pointer pr-8"
           >
@@ -93,10 +111,40 @@ function ExperimentMenuItem({
 }
 
 export function AppSidebar({ activeId, onSelect }: AppSidebarProps) {
+  const { toggleSidebar, isMobile, open } = useSidebar();
+  const [expandedId, setExpandedId] = useState<string | null>(() => findParentId(activeId));
+
+  const handleSelect = (id: string) => {
+    onSelect(id);
+    if (isMobile && open) toggleSidebar();
+  };
+
+  // Auto-collapse when navigating away from a group
+  useEffect(() => {
+    const parent = findParentId(activeId);
+    if (parent) {
+      setExpandedId(parent);
+    } else {
+      setExpandedId(null);
+    }
+  }, [activeId]);
+
+  const handleToggle = (id: string) => {
+    setExpandedId((prev) => (prev === id ? null : id));
+  };
+
   return (
     <Sidebar>
       <SidebarHeader className="px-4 py-4">
-        <h1 className="text-lg font-semibold tracking-tight">GSAP Lab</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-lg font-semibold tracking-tight">GSAP Lab</h1>
+          <button
+            onClick={() => toggleSidebar()}
+            className="lg:hidden p-1 -mr-1 rounded-sm text-sidebar-foreground/50 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+          >
+            <X className="size-4" />
+          </button>
+        </div>
         <p className="text-xs font-mono text-sidebar-foreground/50">
           {topLevelCount} animation experiments
         </p>
@@ -117,7 +165,9 @@ export function AppSidebar({ activeId, onSelect }: AppSidebarProps) {
                     key={exp.id}
                     exp={exp}
                     activeId={activeId}
-                    onSelect={onSelect}
+                    expandedId={expandedId}
+                    onSelect={handleSelect}
+                    onToggle={handleToggle}
                   />
                 ))}
               </SidebarMenu>

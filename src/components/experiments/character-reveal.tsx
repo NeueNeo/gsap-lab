@@ -24,7 +24,7 @@ function TextBlock() {
             {line.split("").map((char, ci) => (
               <span
                 key={`${li}-${ci}`}
-                className="char inline-block text-3xl font-bold tracking-tight text-zinc-100"
+                className="char inline-block text-3xl sm:text-2xl md:text-3xl lg:text-3xl font-bold tracking-tight text-zinc-100"
                 style={{ whiteSpace: char === " " ? "pre" : undefined }}
               >
                 {char === " " ? "\u00A0" : char}
@@ -45,7 +45,7 @@ function WordBlock() {
           {line.split(" ").map((word, wi) => (
             <span
               key={`${li}-${wi}`}
-              className="word inline-block text-3xl font-bold tracking-tight text-zinc-100"
+              className="word inline-block text-3xl sm:text-2xl md:text-3xl lg:text-3xl font-bold tracking-tight text-zinc-100"
             >
               {word}
             </span>
@@ -56,6 +56,15 @@ function WordBlock() {
   );
 }
 
+const VARIANTS = [
+  { id: "slide-up", label: "Slide Up", component: TextBlock },
+  { id: "scale-pop", label: "Scale Pop", component: TextBlock },
+  { id: "blur-in", label: "Blur In", component: TextBlock },
+  { id: "slide-right", label: "Slide Right", component: TextBlock },
+  { id: "flip-in", label: "Flip In", component: TextBlock },
+  { id: "word-scale", label: "Word Scale", component: WordBlock },
+] as const;
+
 export function CharacterReveal({ onReplay }: Props) {
   void onReplay;
   const containerRef = useRef<HTMLDivElement>(null);
@@ -65,20 +74,20 @@ export function CharacterReveal({ onReplay }: Props) {
       const container = containerRef.current;
       if (!container) return;
 
-      // Row 1, Col 1: Slide Up
-      const col1 = container.querySelectorAll(".col-1 .char");
+      // Slide Up
+      const slideUp = container.querySelectorAll('[data-variant="slide-up"] .char');
       gsap.fromTo(
-        col1,
+        slideUp,
         { y: 60, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.6, stagger: 0.025, ease: "power3.out", delay: 0.3 }
       );
 
-      // Row 1, Col 2: Scale Pop
-      const col2 = container.querySelectorAll(".col-2 .char");
-      col2.forEach((char) => {
+      // Scale Pop
+      const scalePop = container.querySelectorAll('[data-variant="scale-pop"] .char');
+      scalePop.forEach((char) => {
         gsap.set(char, { scale: 0, opacity: 0, rotation: gsap.utils.random(-25, 25) });
       });
-      gsap.to(col2, {
+      gsap.to(scalePop, {
         scale: 1,
         opacity: 1,
         rotation: 0,
@@ -88,10 +97,10 @@ export function CharacterReveal({ onReplay }: Props) {
         delay: 0.3,
       });
 
-      // Row 1, Col 3: Blur In (top to bottom)
-      const col3 = container.querySelectorAll(".col-3 .char");
+      // Blur In
+      const blurIn = container.querySelectorAll('[data-variant="blur-in"] .char');
       gsap.fromTo(
-        col3,
+        blurIn,
         { opacity: 0, filter: "blur(12px)" },
         {
           opacity: 1,
@@ -103,46 +112,31 @@ export function CharacterReveal({ onReplay }: Props) {
         }
       );
 
-      // Row 2, Col 4: Slide Right — chars slide in from the left
-      const col4 = container.querySelectorAll(".col-4 .char");
+      // Slide Right
+      const slideRight = container.querySelectorAll('[data-variant="slide-right"] .char');
       gsap.fromTo(
-        col4,
+        slideRight,
         { x: -30, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          duration: 0.4,
-          stagger: 0.03,
-          ease: "power2.out",
-          delay: 0.3,
-        }
+        { x: 0, opacity: 1, duration: 0.4, stagger: 0.03, ease: "power2.out", delay: 0.3 }
       );
 
-      // Row 2, Col 5: Flip In — chars rotate in on X axis like flipping cards
-      const col5 = container.querySelectorAll(".col-5 .char");
+      // Flip In
+      const flipIn = container.querySelectorAll('[data-variant="flip-in"] .char');
       gsap.fromTo(
-        col5,
+        flipIn,
         { rotationX: -90, opacity: 0, transformPerspective: 600 },
-        {
-          rotationX: 0,
-          opacity: 1,
-          duration: 0.6,
-          stagger: 0.03,
-          ease: "power3.out",
-          delay: 0.3,
-        }
+        { rotationX: 0, opacity: 1, duration: 0.6, stagger: 0.03, ease: "power3.out", delay: 0.3 }
       );
 
-      // Row 2, Col 6: Word Scale — each word scales in left to right, row by row
-      const col6Words = container.querySelectorAll(".col-6 .word");
-      // Scale in quick, opacity fades in slower so it's noticeable
+      // Word Scale
+      const wordScale = container.querySelectorAll('[data-variant="word-scale"] .word');
       gsap.fromTo(
-        col6Words,
+        wordScale,
         { scale: 0.6 },
         { scale: 1, duration: 0.5, stagger: 0.1, ease: "power3.out", delay: 0.3 }
       );
       gsap.fromTo(
-        col6Words,
+        wordScale,
         { opacity: 0 },
         { opacity: 1, duration: 0.8, stagger: 0.1, ease: "power1.out", delay: 0.3 }
       );
@@ -153,66 +147,17 @@ export function CharacterReveal({ onReplay }: Props) {
   return (
     <div
       ref={containerRef}
-      className="flex flex-col items-center justify-center h-full p-6 gap-10 overflow-y-auto"
+      className="flex flex-col items-center justify-center min-h-full p-4 sm:p-6 lg:p-8 gap-8 overflow-y-auto"
     >
-      <p className="text-xs font-mono text-zinc-500 tracking-widest uppercase">
-        Character Reveal
-      </p>
-
-      {/* Row 1 */}
-      <div className="flex gap-12">
-        <div className="col-1">
-          <p className="text-[10px] font-mono text-zinc-600 tracking-widest uppercase mb-4">
-            Slide Up
-          </p>
-          <TextBlock />
-        </div>
-
-        <div className="w-px bg-zinc-800" />
-
-        <div className="col-2">
-          <p className="text-[10px] font-mono text-zinc-600 tracking-widest uppercase mb-4">
-            Scale Pop
-          </p>
-          <TextBlock />
-        </div>
-
-        <div className="w-px bg-zinc-800" />
-
-        <div className="col-3">
-          <p className="text-[10px] font-mono text-zinc-600 tracking-widest uppercase mb-4">
-            Blur In
-          </p>
-          <TextBlock />
-        </div>
-      </div>
-
-      {/* Row 2 */}
-      <div className="flex gap-12">
-        <div className="col-4">
-          <p className="text-[10px] font-mono text-zinc-600 tracking-widest uppercase mb-4">
-            Slide Right
-          </p>
-          <TextBlock />
-        </div>
-
-        <div className="w-px bg-zinc-800" />
-
-        <div className="col-5">
-          <p className="text-[10px] font-mono text-zinc-600 tracking-widest uppercase mb-4">
-            Flip In
-          </p>
-          <TextBlock />
-        </div>
-
-        <div className="w-px bg-zinc-800" />
-
-        <div className="col-6">
-          <p className="text-[10px] font-mono text-zinc-600 tracking-widest uppercase mb-4">
-            Word Scale
-          </p>
-          <WordBlock />
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 xl:gap-12 w-full max-w-6xl">
+        {VARIANTS.map(({ id, label, component: Block }) => (
+          <div key={id} data-variant={id} className="min-w-0">
+            <p className="text-[10px] font-mono text-zinc-600 tracking-widest uppercase mb-4">
+              {label}
+            </p>
+            <Block />
+          </div>
+        ))}
       </div>
     </div>
   );

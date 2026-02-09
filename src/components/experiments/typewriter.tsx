@@ -87,17 +87,14 @@ export function Typewriter({ onReplay }: Props) {
       className="flex items-center justify-center h-full p-8"
     >
       <div className="text-center">
-        <span className="text-5xl font-bold tracking-tight text-zinc-100 font-mono">
+        <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-zinc-100 font-mono">
           {displayText}
           <span
-            className={`inline-block w-[3px] h-12 ml-1 bg-emerald-400 align-middle transition-opacity duration-100 ${
+            className={`inline-block w-[3px] h-8 sm:h-10 md:h-12 lg:h-14 ml-1 bg-emerald-400 align-middle transition-opacity duration-100 ${
               showCursor ? "opacity-100" : "opacity-0"
             }`}
           />
         </span>
-        <div className="mt-8 text-sm font-mono text-zinc-500">
-          gsap.to() with onUpdate
-        </div>
       </div>
     </div>
   );

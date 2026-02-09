@@ -33,37 +33,38 @@ export function SvgMaskTextReveal({ onReplay }: Props) {
       const container = containerRef.current;
       if (!container) return;
 
-      const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.5 });
+      const maskText = container.querySelector(".mask-text");
+      if (!maskText) return;
 
-      // Animate the mask text: start small & below, scale up to fill, then shrink away
-      tl.fromTo(
-        ".mask-text",
-        {
-          attr: {
-            transform: `translate(300, 250) scale(0.1)`,
-          },
-          opacity: 0,
-        },
-        {
-          attr: {
-            transform: `translate(300, 200) scale(1)`,
-          },
-          opacity: 1,
-          duration: 1.8,
-          ease: "power3.out",
-        }
-      );
-
-      // Hold
-      tl.to(".mask-text", {
-        duration: 1.5,
+      // Set initial transform via GSAP (SVG transform properties)
+      gsap.set(maskText, {
+        x: 300,
+        y: 250,
+        scale: 0.1,
+        opacity: 0,
+        svgOrigin: "300 200",
       });
 
-      // Shrink away
-      tl.to(".mask-text", {
-        attr: {
-          transform: `translate(300, 150) scale(2.5)`,
-        },
+      const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.5 });
+
+      // Reveal: scale up and slide into position
+      tl.to(maskText, {
+        x: 300,
+        y: 200,
+        scale: 1,
+        opacity: 1,
+        duration: 1.8,
+        ease: "power3.out",
+      });
+
+      // Hold
+      tl.to({}, { duration: 1.5 });
+
+      // Exit: scale up large and fade out
+      tl.to(maskText, {
+        x: 300,
+        y: 150,
+        scale: 2.5,
         opacity: 0,
         duration: 1.4,
         ease: "power3.in",
@@ -134,8 +135,6 @@ export function SvgMaskTextReveal({ onReplay }: Props) {
                 fontFamily="system-ui, sans-serif"
                 letterSpacing="-0.03em"
                 fill="white"
-                transform="translate(300, 200) scale(0.1)"
-                opacity="0"
               >
                 REVEAL
               </text>

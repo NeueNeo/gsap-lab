@@ -31,7 +31,7 @@ export function MaskedLineReveal({ onReplay }: Props) {
       // Start hidden below mask
       gsap.set(lines, { yPercent: 110 });
 
-      const tl = gsap.timeline({ delay: 0.4 });
+      const tl = gsap.timeline({ delay: 0.4, repeat: -1 });
 
       // Reveal: slide up from below the overflow mask
       tl.to(lines, {
@@ -52,17 +52,11 @@ export function MaskedLineReveal({ onReplay }: Props) {
         ease: "power3.in",
       });
 
-      // Pause, then loop
+      // Pause before loop restarts (lines reset to yPercent: 110 via gsap.set above)
       tl.to({}, { duration: 0.6 });
 
-      // Reset below and reveal again
+      // Reset below for next loop iteration
       tl.set(lines, { yPercent: 110 });
-      tl.to(lines, {
-        yPercent: 0,
-        duration: 1,
-        stagger: 0.12,
-        ease: "power3.out",
-      });
     },
     { scope: containerRef }
   );
@@ -72,17 +66,13 @@ export function MaskedLineReveal({ onReplay }: Props) {
       ref={containerRef}
       className="flex flex-col items-center justify-center h-full p-8 gap-8"
     >
-      <p className="text-xs font-mono text-zinc-500 tracking-widest uppercase">
-        Masked Line Reveal
-      </p>
-
-      <div className="flex flex-col items-center gap-1">
+      <div className="flex flex-col items-start gap-1">
         {LINES.map((line, i) => (
           <div
             key={i}
             className="overflow-hidden"
           >
-            <div className="reveal-line text-5xl md:text-6xl font-bold tracking-tight text-zinc-100 whitespace-nowrap">
+            <div className="reveal-line text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-zinc-100 md:whitespace-nowrap">
               {line}
             </div>
           </div>

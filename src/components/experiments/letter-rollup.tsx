@@ -128,7 +128,7 @@ export function LetterRollup({ onReplay }: Props) {
 
   return (
     <div ref={containerRef} className="h-full overflow-auto p-6">
-      <div className="grid grid-cols-2 gap-6 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-6xl mx-auto">
         {VARIANTS.map((v, vi) => (
           <div
             key={`${vi}-${key}`}

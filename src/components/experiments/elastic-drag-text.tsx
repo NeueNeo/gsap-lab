@@ -88,10 +88,6 @@ export function ElasticDragText({ onReplay }: Props) {
       ref={containerRef}
       className="flex flex-col items-center justify-center h-full p-8 gap-8"
     >
-      <p className="text-xs font-mono text-zinc-500 tracking-widest uppercase">
-        Elastic Drag Text
-      </p>
-
       <div
         className="flex"
         onMouseLeave={handleCharLeave}
@@ -100,7 +96,7 @@ export function ElasticDragText({ onReplay }: Props) {
           <span
             key={i}
             ref={(el) => { charsRef.current[i] = el; }}
-            className="inline-block text-8xl font-normal tracking-tight text-zinc-100 cursor-default select-none px-1"
+            className="inline-block text-6xl sm:text-7xl md:text-8xl font-normal tracking-tight text-zinc-100 cursor-default select-none px-1"
             onMouseEnter={() => handleCharEnter(i)}
           >
             {char}

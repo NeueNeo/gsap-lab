@@ -5,7 +5,7 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP);
 
-const TEXT = "WAVE MOTION";
+const TEXT = "FONT WAVE";
 
 interface Props {
   onReplay: () => void;
@@ -56,15 +56,11 @@ export function VariableFontWave({ onReplay }: Props) {
       ref={containerRef}
       className="flex flex-col items-center justify-center h-full p-8 gap-8"
     >
-      <p className="text-xs font-mono text-zinc-500 tracking-widest uppercase">
-        Variable Font Wave
-      </p>
-
       <div className="flex flex-wrap justify-center">
         {TEXT.split("").map((char, i) => (
           <span
             key={i}
-            className="wave-char inline-block text-8xl tracking-tight text-zinc-100"
+            className="wave-char inline-block text-5xl sm:text-5xl md:text-7xl lg:text-8xl tracking-tight text-zinc-100"
             style={{
               whiteSpace: char === " " ? "pre" : undefined,
               fontWeight: 100,

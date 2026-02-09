@@ -117,18 +117,14 @@ export function RollingText({ onReplay }: Props) {
       ref={containerRef}
       className="flex flex-col items-center justify-center h-full p-8 gap-8"
     >
-      <p className="text-xs font-mono text-zinc-500 tracking-widest uppercase">
-        Rolling Text
-      </p>
-
-      <div className="flex gap-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12 xl:gap-16 w-full max-w-5xl">
         {/* LEFT — Solid: slot machine roll, overflow clips each letter */}
         <div className="col-solid space-y-6">
           <p className="text-[10px] font-mono text-zinc-600 tracking-widest uppercase mb-4">
             Clip Reveal
           </p>
           {WORDS.map((word, wi) => (
-            <div key={wi} className="roll-word relative">
+            <div key={wi} className="roll-word relative w-fit">
               <div className="flex">
                 {word.split("").map((char, ci) => (
                   <span
@@ -136,7 +132,7 @@ export function RollingText({ onReplay }: Props) {
                     className="inline-block overflow-hidden"
                     style={{ lineHeight: 1 }}
                   >
-                    <span className="roll-inner inline-block text-7xl font-black tracking-tight text-zinc-100">
+                    <span className="roll-inner inline-block text-6xl sm:text-7xl md:text-7xl lg:text-6xl xl:text-6xl font-black tracking-tight text-zinc-100">
                       {char}
                     </span>
                   </span>
@@ -146,8 +142,6 @@ export function RollingText({ onReplay }: Props) {
             </div>
           ))}
         </div>
-
-        <div className="w-px bg-zinc-800" />
 
         {/* RIGHT — Fade: same roll + clip, but letters also fade from 0→100% opacity */}
         <div className="col-fade space-y-6">
@@ -155,7 +149,7 @@ export function RollingText({ onReplay }: Props) {
             Opacity Fade
           </p>
           {WORDS.map((word, wi) => (
-            <div key={wi} className="roll-word relative">
+            <div key={wi} className="roll-word relative w-fit">
               <div className="flex">
                 {word.split("").map((char, ci) => (
                   <span
@@ -163,7 +157,7 @@ export function RollingText({ onReplay }: Props) {
                     className="inline-block overflow-hidden"
                     style={{ lineHeight: 1 }}
                   >
-                    <span className="roll-inner inline-block text-7xl font-black tracking-tight text-zinc-100">
+                    <span className="roll-inner inline-block text-6xl sm:text-7xl md:text-7xl lg:text-6xl xl:text-6xl font-black tracking-tight text-zinc-100">
                       {char}
                     </span>
                   </span>
@@ -173,15 +167,13 @@ export function RollingText({ onReplay }: Props) {
             </div>
           ))}
         </div>
-        <div className="w-px bg-zinc-800" />
-
         {/* THIRD — Fade only: no y movement, pure opacity per letter */}
         <div className="col-fade-only space-y-6">
           <p className="text-[10px] font-mono text-zinc-600 tracking-widest uppercase mb-4">
             Fade Only
           </p>
           {WORDS.map((word, wi) => (
-            <div key={wi} className="roll-word relative">
+            <div key={wi} className="roll-word relative w-fit">
               <div className="flex">
                 {word.split("").map((char, ci) => (
                   <span
@@ -189,7 +181,7 @@ export function RollingText({ onReplay }: Props) {
                     className="inline-block"
                     style={{ lineHeight: 1 }}
                   >
-                    <span className="roll-inner inline-block text-7xl font-black tracking-tight text-zinc-100">
+                    <span className="roll-inner inline-block text-6xl sm:text-7xl md:text-7xl lg:text-6xl xl:text-6xl font-black tracking-tight text-zinc-100">
                       {char}
                     </span>
                   </span>
@@ -199,12 +191,6 @@ export function RollingText({ onReplay }: Props) {
             </div>
           ))}
         </div>
-      </div>
-
-      <div className="flex gap-1.5 mt-2">
-        {[...Array(3)].map((_, i) => (
-          <div key={i} className="w-8 h-1 rounded-full bg-zinc-700" />
-        ))}
       </div>
     </div>
   );

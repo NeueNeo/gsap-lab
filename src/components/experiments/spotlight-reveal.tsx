@@ -1,5 +1,5 @@
 
-import { useRef, useEffect, useCallback, useState } from "react";
+import { useRef, useCallback, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
@@ -17,45 +17,33 @@ export function SpotlightReveal({ onReplay }: Props) {
   const revealRef = useRef<HTMLDivElement>(null);
   const quickX = useRef<gsap.QuickToFunc | null>(null);
   const quickY = useRef<gsap.QuickToFunc | null>(null);
-  const posRef = useRef({ x: 0, y: 0 });
   const [isInside, setIsInside] = useState(false);
 
-  useGSAP(
+  const { contextSafe } = useGSAP(
     () => {
+      const reveal = revealRef.current;
+      if (!reveal) return;
+
       gsap.from(".spotlight-container", {
         opacity: 0,
         duration: 0.8,
         ease: "power2.out",
         delay: 0.3,
       });
+
+      // Proxy object for quickTo position tracking
+      const proxy = { x: 0, y: 0 };
+      quickX.current = gsap.quickTo(proxy, "x", { duration: 0.3, ease: "power3" });
+      quickY.current = gsap.quickTo(proxy, "y", { duration: 0.3, ease: "power3" });
+
+      // rAF loop to apply mask position — gsap.ticker for auto-cleanup
+      gsap.ticker.add(() => {
+        reveal.style.maskImage = `radial-gradient(circle ${SPOTLIGHT_RADIUS}px at ${proxy.x}px ${proxy.y}px, black 0%, transparent 100%)`;
+        reveal.style.webkitMaskImage = `radial-gradient(circle ${SPOTLIGHT_RADIUS}px at ${proxy.x}px ${proxy.y}px, black 0%, transparent 100%)`;
+      });
     },
     { scope: containerRef }
   );
-
-  // We use quickTo for position tracking, but apply mask via RAF
-  useEffect(() => {
-    const reveal = revealRef.current;
-    if (!reveal) return;
-
-    // Track x/y with dummy elements so quickTo works
-    const proxy = { x: 0, y: 0 };
-    const xTo = gsap.quickTo(proxy, "x", { duration: 0.3, ease: "power3" });
-    const yTo = gsap.quickTo(proxy, "y", { duration: 0.3, ease: "power3" });
-
-    quickX.current = xTo;
-    quickY.current = yTo;
-
-    let raf: number;
-    const update = () => {
-      posRef.current = { x: proxy.x, y: proxy.y };
-      reveal.style.maskImage = `radial-gradient(circle ${SPOTLIGHT_RADIUS}px at ${proxy.x}px ${proxy.y}px, black 0%, transparent 100%)`;
-      reveal.style.webkitMaskImage = `radial-gradient(circle ${SPOTLIGHT_RADIUS}px at ${proxy.x}px ${proxy.y}px, black 0%, transparent 100%)`;
-      raf = requestAnimationFrame(update);
-    };
-    raf = requestAnimationFrame(update);
-
-    return () => cancelAnimationFrame(raf);
-  }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
@@ -66,15 +54,15 @@ export function SpotlightReveal({ onReplay }: Props) {
     quickY.current?.(y);
   }, []);
 
-  const handleMouseEnter = useCallback(() => {
+  const handleMouseEnter = contextSafe(useCallback(() => {
     setIsInside(true);
     gsap.to(revealRef.current, { opacity: 1, duration: 0.4, ease: "power2.out" });
-  }, []);
+  }, []));
 
-  const handleMouseLeave = useCallback(() => {
+  const handleMouseLeave = contextSafe(useCallback(() => {
     setIsInside(false);
     gsap.to(revealRef.current, { opacity: 0, duration: 0.5, ease: "power2.in" });
-  }, []);
+  }, []));
 
   return (
     <div

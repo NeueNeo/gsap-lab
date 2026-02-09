@@ -35,7 +35,7 @@ function TextBlock() {
             {line.split("").map((char, ci) => (
               <span
                 key={`${li}-${ci}`}
-                className="char inline-block text-5xl font-bold tracking-tight text-zinc-100"
+                className="char inline-block text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-zinc-100"
                 style={{ whiteSpace: char === " " ? "pre" : undefined }}
               >
                 {char === " " ? "\u00A0" : char}
@@ -56,7 +56,7 @@ function WordBlock() {
           {line.split(" ").map((word, wi) => (
             <span
               key={`${li}-${wi}`}
-              className="word inline-block text-5xl font-bold tracking-tight text-zinc-100"
+              className="word inline-block text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight text-zinc-100"
             >
               {word}
             </span>
@@ -161,9 +161,6 @@ export function CharacterRevealVariant({ onReplay, variant }: Props) {
       ref={containerRef}
       className="flex flex-col items-center justify-center h-full p-8"
     >
-      <p className="text-[10px] font-mono text-zinc-500 tracking-widest uppercase mb-8">
-        Character Reveal · {VARIANT_LABELS[variant]}
-      </p>
       {usesWords ? <WordBlock /> : <TextBlock />}
     </div>
   );

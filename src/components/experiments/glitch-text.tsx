@@ -134,7 +134,7 @@ export function GlitchText({ onReplay }: Props) {
       {GLITCH_TEXT.split("").map((char, i) => (
         <span
           key={i}
-          className="g-char inline-block text-8xl font-black tracking-tight"
+          className="g-char inline-block text-7xl sm:text-8xl font-black tracking-tight"
         >
           {char}
         </span>
@@ -147,10 +147,6 @@ export function GlitchText({ onReplay }: Props) {
       ref={containerRef}
       className="flex flex-col items-center justify-center h-full p-8 gap-6"
     >
-      <p className="text-xs font-mono text-zinc-500 tracking-widest uppercase z-10">
-        Glitch Text
-      </p>
-
       <div className="relative w-full max-w-xl h-40">
         {/* Scanlines overlay */}
         <div
@@ -175,7 +171,7 @@ export function GlitchText({ onReplay }: Props) {
           {GLITCH_TEXT.split("").map((char, i) => (
             <span
               key={i}
-              className="g-char inline-block text-8xl font-black tracking-tight text-zinc-100"
+              className="g-char inline-block text-7xl sm:text-8xl font-black tracking-tight text-zinc-100"
             >
               {char}
             </span>
@@ -183,10 +179,6 @@ export function GlitchText({ onReplay }: Props) {
         </div>
       </div>
 
-      <div className="flex gap-3 items-center z-10">
-        <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-        <span className="text-xs font-mono text-zinc-600">sys.glitch active</span>
-      </div>
     </div>
   );
 }

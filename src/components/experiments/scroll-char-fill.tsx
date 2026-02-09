@@ -83,7 +83,7 @@ export function ScrollCharFill({ onReplay }: Props) {
                       <span
                         key={ci}
                         ref={(el) => { charRefs.current[startIdx + ci] = el; }}
-                        className="inline-block text-7xl font-black tracking-tight"
+                        className="inline-block text-5xl sm:text-7xl font-black tracking-tight"
                         style={{ color: "rgb(39 39 42)" }}
                       >
                         {char}

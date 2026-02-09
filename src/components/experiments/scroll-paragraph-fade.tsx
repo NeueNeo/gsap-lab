@@ -110,9 +110,11 @@ export function ScrollParagraphFade({ onReplay }: Props) {
   return (
     <div ref={containerRef} className="h-full overflow-y-auto bg-zinc-950">
       <div className="max-w-2xl mx-auto px-8">
-        <div className="h-[40vh] flex items-end justify-center pb-8">
+        <div className="h-[40vh] flex items-end justify-center pb-24">
           <p className="text-xs font-mono text-zinc-600 tracking-widest">↓ SCROLL TO READ</p>
         </div>
+
+        <div className="h-32" />
 
         <div className="space-y-24 py-16">
           {PARAGRAPHS.map((para, i) => (
@@ -121,7 +123,7 @@ export function ScrollParagraphFade({ onReplay }: Props) {
                 {para.label}
               </span>
               <div className="para-line h-px bg-zinc-700/50 origin-left mb-6" />
-              <p className="text-2xl font-medium leading-relaxed tracking-tight">
+              <p className="text-xl sm:text-2xl font-medium leading-snug sm:leading-relaxed tracking-tight">
                 {para.text.split(" ").map((word, wi) => (
                   <span
                     key={wi}
@@ -142,7 +144,7 @@ export function ScrollParagraphFade({ onReplay }: Props) {
           </p>
         </div>
 
-        <div className="h-[50vh] flex items-center justify-center">
+        <div className="h-[70vh] flex items-center justify-center">
           <p className="text-xs font-mono text-zinc-700">◆</p>
         </div>
       </div>

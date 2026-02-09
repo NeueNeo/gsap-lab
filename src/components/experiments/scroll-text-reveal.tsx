@@ -1,12 +1,12 @@
-
-import { useRef, useEffect, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
 
-gsap.registerPlugin(useGSAP, ScrollTrigger);
+gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText);
 
-const PARAGRAPH = `Design is not just what it looks like and feels like. Design is how it works. Every detail matters. Every pixel serves a purpose. The best interfaces disappear — they become invisible conduits between intention and action. We build systems that respect the user's time, handle every edge case, and feel intentional from the first interaction to the last. Typography sets the tone. Spacing creates rhythm. Color guides attention. Motion provides feedback. Together they form a language — one that speaks without words, guides without instruction, and delights without distraction. The craft is in the invisible work: the loading states that reassure, the error messages that help, the transitions that orient. Great software feels alive — responsive, aware, and effortlessly fluid.`;
+const PARAGRAPH = `Design is not just what it looks like and feels like. Design is how it works. Every detail matters. Every pixel serves a purpose. The best interfaces disappear — they become invisible conduits between intention and action. We build systems that respect the user's time, handle every edge case, and feel intentional from the first interaction to the last. Typography sets the tone. Spacing creates rhythm. Color guides attention. Motion provides feedback. Together they form a language — one that speaks without words, guides without instruction, and delights without distraction.`;
 
 interface Props {
   onReplay: () => void;
@@ -15,76 +15,102 @@ interface Props {
 export function ScrollTextReveal({ onReplay }: Props) {
   void onReplay;
   const containerRef = useRef<HTMLDivElement>(null);
-  const [scrollerH, setScrollerH] = useState(0);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLParagraphElement>(null);
+  const [ready, setReady] = useState(false);
 
+  // Reset scroll and wait one frame for layout
   useEffect(() => {
-    if (containerRef.current) {
-      setScrollerH(containerRef.current.offsetHeight);
-    }
+    const scroller = containerRef.current;
+    if (scroller) scroller.scrollTop = 0;
+    const id = requestAnimationFrame(() => setReady(true));
+    return () => cancelAnimationFrame(id);
   }, []);
 
   useGSAP(
     () => {
-      if (!scrollerH) return;
+      if (!ready) return;
       const scroller = containerRef.current;
-      if (!scroller) return;
+      const wrapper = wrapperRef.current;
+      const sticky = stickyRef.current;
+      const textEl = textRef.current;
+      if (!scroller || !wrapper || !sticky || !textEl) return;
 
-      const words = gsap.utils.toArray<HTMLSpanElement>(".reveal-word", scroller);
-      if (!words.length) return;
+      const scrollerH = scroller.clientHeight;
+      if (!scrollerH) return;
 
-      gsap.fromTo(
-        words,
-        { color: "rgb(63 63 70)" },
-        {
-          color: "rgb(244 244 245)",
-          stagger: 0.05,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".text-reveal-block",
-            scroller: scroller,
-            start: "top bottom",
-            end: "bottom center",
-            scrub: 1,
-          },
-        }
+      // Set heights
+      const scrollRange = scrollerH * 2.5;
+      wrapper.style.height = `${scrollerH + scrollRange}px`;
+      sticky.style.height = `${scrollerH}px`;
+
+      // Split text
+      const split = new SplitText(textEl, {
+        type: "words",
+        wordsClass: "word",
+      });
+
+      // Force layout recalc
+      void wrapper.offsetHeight;
+
+      // Reset scroll to top so nothing is pre-revealed
+      scroller.scrollTop = 0;
+
+      // Timeline + ScrollTrigger
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: wrapper,
+          scroller: scroller,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: true,
+        },
+      });
+
+      tl.set(
+        split.words,
+        { opacity: 1, stagger: { each: 1 / split.words.length } },
+        0
       );
-    },
-    { scope: containerRef, dependencies: [scrollerH] }
-  );
+      tl.set({}, {}, "+=0.01");
 
-  const words = PARAGRAPH.split(" ");
+      return () => {
+        split.revert();
+        wrapper.style.height = "";
+        sticky.style.height = "";
+      };
+    },
+    { scope: containerRef, dependencies: [ready] }
+  );
 
   return (
     <div ref={containerRef} className="h-full overflow-y-auto bg-zinc-950">
-      <div className="max-w-3xl mx-auto px-8">
-        {/* Top spacer — full scroller height so text starts off-screen */}
-        <div style={{ height: scrollerH || "100%" }} className="flex items-center justify-center">
-          <p className="text-xs font-mono text-zinc-600 tracking-widest">↓ SCROLL TO REVEAL</p>
-        </div>
+      {/* Top spacer */}
+      <div className="h-[80vh] flex items-center justify-center">
+        <p className="text-xs font-mono text-zinc-600 tracking-widest uppercase">
+          ↓ Scroll to reveal
+        </p>
+      </div>
 
-        {/* Text block — scrolls naturally */}
-        <div className="text-reveal-block py-16">
-          <p className="text-3xl md:text-4xl font-semibold leading-relaxed tracking-tight">
-            {words.map((word, i) => (
-              <span key={i} className="reveal-word inline-block mr-[0.3em]" style={{ color: "rgb(63 63 70)" }}>
-                {word}
-              </span>
-            ))}
+      {/* Wrapper */}
+      <div ref={wrapperRef} style={{ height: "300vh" }}>
+        <div
+          ref={stickyRef}
+          className="sticky top-0 flex items-center justify-center px-4 sm:px-6 md:px-8"
+          style={{ height: "100vh" }}
+        >
+          <p
+            ref={textRef}
+            className="max-w-3xl lg:max-w-5xl text-lg sm:text-2xl md:text-3xl lg:text-4xl font-semibold leading-snug sm:leading-relaxed tracking-tight text-zinc-100 [&>.word]:opacity-[0.15]"
+          >
+            {PARAGRAPH}
           </p>
-        </div>
-
-        {/* Attribution */}
-        <div className="py-8 border-t border-zinc-800/50">
-          <p className="text-xs font-mono text-zinc-600 tracking-widest">
-            Scrubbed word-by-word reveal · zinc-700 → zinc-100
-          </p>
-        </div>
-
-        {/* Lots of bottom breathing room */}
-        <div style={{ height: scrollerH ? scrollerH * 0.5 : "50%" }} className="flex items-center justify-center">
-          <p className="text-xs font-mono text-zinc-700">◆</p>
         </div>
       </div>
+
+      {/* Bottom spacer */}
+      <div className="h-[80vh]" />
     </div>
   );
 }

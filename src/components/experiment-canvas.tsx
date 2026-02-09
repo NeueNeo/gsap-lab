@@ -1,6 +1,8 @@
 
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
+import { useSidebar } from "@/components/ui/sidebar";
+import { Menu } from "lucide-react";
 import { allExperiments } from "@/lib/experiments";
 import { CharacterReveal } from "./experiments/character-reveal";
 import { CharacterRevealVariant } from "./experiments/character-reveal-variant";
@@ -21,12 +23,13 @@ import { ElasticMenus } from "./experiments/elastic-menus";
 import { SvgPathDraw } from "./experiments/svg-path-draw";
 import { MorphingShape } from "./experiments/morphing-shape";
 import { NumberCounter } from "./experiments/number-counter";
-import { SplitScatter } from "./experiments/split-scatter";
 import { GlitchText } from "./experiments/glitch-text";
 import { RollingText } from "./experiments/rolling-text";
-import { TextWave } from "./experiments/text-wave";
+import { WaveMotion } from "./experiments/wave-motion";
+import { RippleEffect } from "./experiments/ripple-effect";
 import { LetterRollup } from "./experiments/letter-rollup";
 import { CylinderText } from "./experiments/cylinder-text";
+import { CylinderTextVariant } from "./experiments/cylinder-text-variant";
 import { ScrollVelocitySkew } from "./experiments/scroll-velocity-skew";
 import { BatchStaggerReveal } from "./experiments/batch-stagger-reveal";
 import { SnapSections } from "./experiments/snap-sections";
@@ -53,7 +56,6 @@ import { StackingPages } from "./experiments/stacking-pages";
 import { StackingPagesFade } from "./experiments/stacking-pages-fade";
 import { ParallaxDepthField } from "./experiments/parallax-depth-field";
 import { ParallaxHover } from "./experiments/parallax-hover";
-import { ZipperTextReveal } from "./experiments/zipper-text-reveal";
 import { VariableFontWave } from "./experiments/variable-font-wave";
 import { ElasticDragText } from "./experiments/elastic-drag-text";
 import { MaskedLineReveal } from "./experiments/masked-line-reveal";
@@ -123,12 +125,16 @@ const experimentComponents: Record<string, React.ComponentType<{ onReplay: () =>
   "svg-path-draw": SvgPathDraw,
   "morphing-shape": MorphingShape,
   "number-counter": NumberCounter,
-  "split-scatter": SplitScatter,
   "glitch-text": GlitchText,
   "rolling-text": RollingText,
-  "text-wave": TextWave,
+  "wave-motion": WaveMotion,
+  "ripple-effect": RippleEffect,
   "letter-rollup": LetterRollup,
   "cylinder-text": CylinderText,
+  "cylinder-text--drum": (p: { onReplay: () => void }) => <CylinderTextVariant {...p} variant="drum" />,
+  "cylinder-text--ring": (p: { onReplay: () => void }) => <CylinderTextVariant {...p} variant="ring" />,
+  "cylinder-text--tilted-orbit": (p: { onReplay: () => void }) => <CylinderTextVariant {...p} variant="tilted-orbit" />,
+  "cylinder-text--double-helix": (p: { onReplay: () => void }) => <CylinderTextVariant {...p} variant="double-helix" />,
   "scroll-velocity-skew": ScrollVelocitySkew,
   "batch-stagger-reveal": BatchStaggerReveal,
   "snap-sections": SnapSections,
@@ -155,7 +161,6 @@ const experimentComponents: Record<string, React.ComponentType<{ onReplay: () =>
   "stacking-pages-fade": StackingPagesFade,
   "parallax-depth-field": ParallaxDepthField,
   "parallax-hover": ParallaxHover,
-  "zipper-text-reveal": ZipperTextReveal,
   "variable-font-wave": VariableFontWave,
   "elastic-drag-text": ElasticDragText,
   "masked-line-reveal": MaskedLineReveal,
@@ -191,6 +196,7 @@ interface ExperimentCanvasProps {
 }
 
 export function ExperimentCanvas({ activeId }: ExperimentCanvasProps) {
+  const { toggleSidebar } = useSidebar();
   const [replayKey, setReplayKey] = useState(0);
   const experiment = allExperiments.find((e) => e.id === activeId);
   const Component = experimentComponents[activeId];
@@ -202,15 +208,20 @@ export function ExperimentCanvas({ activeId }: ExperimentCanvasProps) {
   if (!Component || !experiment) return null;
 
   return (
-    <main className="flex-1 flex flex-col h-screen overflow-hidden bg-zinc-950">
-      <header className="flex items-center justify-between px-6 py-4 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-sm">
-        <div>
-          <h2 className="text-base font-semibold text-zinc-100">
-            {experiment.name}
-          </h2>
-          <p className="text-xs font-mono text-zinc-500 mt-0.5">
-            {experiment.category}
-          </p>
+    <main className="flex-1 flex flex-col h-screen max-h-screen overflow-hidden bg-zinc-950">
+      <header className="flex items-center justify-between pl-3 pr-4 lg:px-6 py-4 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-sm">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="icon" className="lg:hidden text-zinc-400 hover:text-zinc-100" onClick={() => toggleSidebar()}>
+            <Menu className="size-5" />
+          </Button>
+          <div>
+            <p className="text-xs font-mono font-medium text-zinc-500">
+              {experiment.category}
+            </p>
+            <h2 className="text-base font-semibold text-zinc-100">
+              {experiment.name}
+            </h2>
+          </div>
         </div>
         <Button
           variant="outline"
@@ -221,7 +232,7 @@ export function ExperimentCanvas({ activeId }: ExperimentCanvasProps) {
           ↻ Replay
         </Button>
       </header>
-      <div className="flex-1 overflow-x-hidden overflow-y-auto relative">
+      <div className="flex-1 overflow-hidden relative pt-4">
         <div key={replayKey} className="h-full">
           <Component onReplay={handleReplay} />
         </div>
